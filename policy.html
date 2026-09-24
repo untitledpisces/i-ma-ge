@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy | Singgah Sana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mist': '#f3f1ec',
+                        'seafoam': '#95c9b9',
+                        'moss': '#4f5c4e',
+                        'charcoal': '#2d2a26',
+                        'sand': '#e8e2d5',
+                        'clay': '#c9a88a',
+                        'ink': '#1a1815',
+                        'paper': '#faf8f4',
+                    },
+                    fontFamily: {
+                        serif: ['Marcellus', 'serif'],
+                        sans: ['"Work Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f3f1ec;
+            color: #2d2a26;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+        .line-wrapper {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: top;
+            padding-bottom: 0.1em;
+        }
+        
+        .img-reveal-container {
+            overflow: hidden;
+            position: relative;
+            transform: translateZ(0);
+            background-color: rgba(45, 42, 38, 0.1);
+        }
+
+        ::selection { background-color: #4f5c4e; color: #f3f1ec; }
+        
+        .nav-hidden { transform: translate3d(0, -100%, 0); }
+        .nav-visible { transform: translate3d(0, 0, 0); }
+
+        .clip-menu-hidden { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+        .clip-menu-visible { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+        .texture-overlay {
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           FOOTER LINKS
+           ============================================================ */
+        .footer-link {
+            display: inline-block;
+            font-size: 0.95rem;
+            color: rgba(243, 241, 236, 0.75);
+            transition: color 0.4s, padding-left 0.4s;
+            position: relative;
+        }
+        .footer-link:hover {
+            color: #f3f1ec;
+            padding-left: 8px;
+        }
+        .footer-link::before {
+            content: '·';
+            position: absolute;
+            left: -4px;
+            opacity: 0;
+            transition: opacity 0.4s, left 0.4s;
+            color: #95c9b9;
+        }
+        .footer-link:hover::before {
+            opacity: 1;
+            left: -8px;
+        }
+
+        /* ============================================================
+           LIVE CHAT — posisi KIRI bawah
+           ============================================================ */
+        .chat-button {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 60;
+            height: 52px;
+            padding: 0 20px 0 16px;
+            border-radius: 999px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(45, 42, 38, 0.28);
+            transition: background 0.4s, transform 0.4s, box-shadow 0.4s, opacity 0.4s;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+        }
+        .chat-button:hover {
+            background: #2d2a26;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(45, 42, 38, 0.35);
+        }
+        .chat-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 1.75;
+            fill: none;
+        }
+        .chat-button::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 999px;
+            border: 1px solid #95c9b9;
+            opacity: 0;
+            animation: chatPulse 3.4s ease-out infinite;
+            pointer-events: none;
+        }
+        @keyframes chatPulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 0; transform: scale(1.15); }
+        }
+        .chat-button.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 92px;
+            left: 24px;
+            z-index: 61;
+            width: 400px;
+            max-width: calc(100vw - 48px);
+            height: 600px;
+            max-height: calc(100vh - 140px);
+            background: #f3f1ec;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 60px rgba(45, 42, 38, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.98);
+            transform-origin: bottom left;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0.4s,
+                        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .chat-panel.is-open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .chat-header {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 20px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-header-title {
+            font-family: 'Marcellus', serif;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+        }
+        .chat-header-status {
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            font-family: 'Work Sans', sans-serif;
+        }
+        .chat-header-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #95c9b9;
+            animation: chatStatusPulse 2s ease-in-out infinite;
+        }
+        @keyframes chatStatusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: #f3f1ec;
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.75;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .chat-close:hover { opacity: 1; }
+        .chat-close svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #f3f1ec;
+            scroll-behavior: smooth;
+        }
+        .chat-body::-webkit-scrollbar { width: 4px; }
+        .chat-body::-webkit-scrollbar-thumb {
+            background: rgba(79, 92, 78, 0.25);
+            border-radius: 2px;
+        }
+
+        .chat-msg {
+            max-width: 86%;
+            font-size: 13.5px;
+            line-height: 1.55;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        @keyframes msgIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-msg--bot { align-self: flex-start; }
+        .chat-msg--user { align-self: flex-end; }
+        .chat-msg__bubble {
+            padding: 12px 16px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 300;
+            border-radius: 2px;
+        }
+        .chat-msg--bot .chat-msg__bubble {
+            background: #ffffff;
+            color: #2d2a26;
+            border-left: 2px solid #4f5c4e;
+        }
+        .chat-msg--user .chat-msg__bubble {
+            background: #4f5c4e;
+            color: #f3f1ec;
+        }
+        .chat-msg__time {
+            font-size: 9px;
+            color: rgba(45, 42, 38, 0.4);
+            margin-top: 5px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        .chat-msg--user .chat-msg__time { text-align: right; }
+
+        .chat-typing {
+            align-self: flex-start;
+            max-width: 86%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-left: 2px solid #4f5c4e;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            opacity: 0;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .chat-typing span {
+            width: 6px;
+            height: 6px;
+            background: #4f5c4e;
+            border-radius: 50%;
+            opacity: 0.35;
+            animation: typingBounce 1.2s ease-in-out infinite;
+        }
+        .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-quick {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .chat-quick button {
+            background: transparent;
+            border: 1px solid rgba(79, 92, 78, 0.3);
+            color: #4f5c4e;
+            padding: 7px 13px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            border-radius: 2px;
+        }
+        .chat-quick button:hover {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+
+        .chat-input-wrap {
+            border-top: 1px solid rgba(79, 92, 78, 0.15);
+            padding: 14px 18px;
+            background: #f3f1ec;
+            flex-shrink: 0;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13.5px;
+            color: #2d2a26;
+            padding: 8px 0;
+            resize: none;
+            outline: none;
+            max-height: 80px;
+            line-height: 1.5;
+        }
+        .chat-input::placeholder { color: rgba(45, 42, 38, 0.4); }
+        .chat-send {
+            width: 38px;
+            height: 38px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.3s;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+        .chat-send:hover {
+            background: #2d2a26;
+            transform: translateY(-1px);
+        }
+        .chat-send svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        .chat-send:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .chat-footer {
+            text-align: center;
+            padding: 10px 20px 14px;
+            font-size: 9.5px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.5);
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .chat-panel {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                bottom: 0;
+                right: 0;
+                top: 0;
+                left: 0;
+            }
+            .chat-button {
+                bottom: 20px;
+                left: 20px;
+                height: 48px;
+                padding: 0 16px 0 14px;
+                font-size: 10px;
+            }
+            .chat-panel.is-open ~ .chat-button {
+                display: none;
+            }
+        }
+
+        /* ============================================================
+           POLICY PAGE — UI/UX KHUSUS
+           ============================================================ */
+
+        /* Hero — compact, typographic, with meta bar */
+        .pol-hero-meta {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(243, 241, 236, 0.2);
+        }
+        @media (min-width: 768px) {
+            .pol-hero-meta {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 3rem;
+            }
+        }
+        .pol-hero-meta__item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .pol-hero-meta__label {
+            font-size: 9.5px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(243, 241, 236, 0.5);
+        }
+        .pol-hero-meta__value {
+            font-family: 'Marcellus', serif;
+            font-size: 1.15rem;
+            color: #f3f1ec;
+            letter-spacing: -0.005em;
+        }
+
+        /* Policy layout — sticky TOC + content */
+        .pol-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+        @media (min-width: 1024px) {
+            .pol-layout {
+                grid-template-columns: 280px 1fr;
+                gap: 5rem;
+            }
+        }
+
+        /* Sticky TOC */
+        .pol-toc {
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .pol-toc {
+                position: sticky;
+                top: 120px;
+                align-self: start;
+            }
+        }
+
+        .pol-toc__title {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.6);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(79, 92, 78, 0.2);
+        }
+
+        .pol-toc__list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .pol-toc__link {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.85rem 0;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            color: rgba(45, 42, 38, 0.55);
+            text-decoration: none;
+            transition: color 0.4s, padding-left 0.4s;
+            border-bottom: 1px solid rgba(45, 42, 38, 0.06);
+            cursor: pointer;
+            background: none;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            text-align: left;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        .pol-toc__link:hover {
+            color: #2d2a26;
+            padding-left: 0.4rem;
+        }
+        .pol-toc__link.is-active {
+            color: #4f5c4e;
+            padding-left: 0.4rem;
+        }
+        .pol-toc__link.is-active .pol-toc__num {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+        .pol-toc__num {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1px solid rgba(79, 92, 78, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Marcellus', serif;
+            font-size: 10px;
+            letter-spacing: 0;
+            transition: background 0.4s, color 0.4s, border-color 0.4s;
+        }
+
+        /* Summary box */
+        .pol-summary {
+            padding: 2rem 2rem 2rem 2.25rem;
+            background: rgba(79, 92, 78, 0.06);
+            border-left: 3px solid #4f5c4e;
+            margin-bottom: 3.5rem;
+            position: relative;
+        }
+        .pol-summary__label {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #4f5c4e;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .pol-summary__text {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+            line-height: 1.55;
+            letter-spacing: -0.005em;
+            color: #2d2a26;
+        }
+
+        /* Policy section */
+        .pol-section {
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(45, 42, 38, 0.1);
+            scroll-margin-top: 100px;
+        }
+        .pol-section:first-child {
+            padding-top: 0;
+        }
+        .pol-section:last-child {
+            border-bottom: none;
+        }
+
+        .pol-section__header {
+            display: flex;
+            align-items: baseline;
+            gap: 1.25rem;
+            margin-bottom: 1.75rem;
+        }
+        .pol-section__num {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.35em;
+            color: rgba(79, 92, 78, 0.5);
+            flex-shrink: 0;
+        }
+        .pol-section__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+            color: #2d2a26;
+        }
+
+        /* Policy body */
+        .pol-body {
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(45, 42, 38, 0.72);
+            max-width: 52rem;
+        }
+        .pol-body p + p {
+            margin-top: 1.25rem;
+        }
+
+        /* Clause list */
+        .pol-clauses {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .pol-clause {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 1.25rem;
+            padding: 1.1rem 0;
+            border-top: 1px solid rgba(45, 42, 38, 0.08);
+            align-items: start;
+        }
+        .pol-clause:first-child {
+            border-top: 1px solid rgba(45, 42, 38, 0.15);
+        }
+        .pol-clause__mark {
+            font-family: 'Marcellus', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            color: rgba(79, 92, 78, 0.55);
+            padding-top: 0.3rem;
+        }
+        .pol-clause__text {
+            font-weight: 300;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(45, 42, 38, 0.68);
+        }
+        .pol-clause__text strong {
+            font-weight: 500;
+            color: #2d2a26;
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        /* Note / warning block */
+        .pol-note {
+            margin-top: 1.75rem;
+            padding: 1.25rem 1.5rem;
+            background: rgba(201, 168, 138, 0.14);
+            border-left: 2px solid #c9a88a;
+            font-weight: 300;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: rgba(45, 42, 38, 0.75);
+        }
+        .pol-note__label {
+            display: block;
+            font-size: 9.5px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #a8875f;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+        }
+
+        /* Print button / actions */
+        .pol-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 4rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(45, 42, 38, 0.15);
+        }
+        .pol-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.75rem;
+            background: transparent;
+            border: 1px solid rgba(45, 42, 38, 0.2);
+            color: #2d2a26;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.4s, color 0.4s, border-color 0.4s;
+        }
+        .pol-action:hover {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+        .pol-action svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 1.75;
+            fill: none;
+        }
+        .pol-action--primary {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+        .pol-action--primary:hover {
+            background: #2d2a26;
+            border-color: #2d2a26;
+        }
+
+        /* Badge — last updated */
+        .pol-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 1rem;
+            background: rgba(149, 201, 185, 0.18);
+            border: 1px solid rgba(149, 201, 185, 0.4);
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: #95c9b9;
+            margin-bottom: 1.5rem;
+        }
+        .pol-badge__dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #95c9b9;
+            animation: polBadgePulse 2.4s ease-in-out infinite;
+        }
+        @keyframes polBadgePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+
+        /* Reading progress */
+        .pol-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: #95c9b9;
+            z-index: 45;
+            width: 0%;
+            transition: width 0.1s linear;
+            pointer-events: none;
+        }
+
+        /* Editorial number */
+        .pol-editorial-number {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(8rem, 22vw, 20rem);
+            line-height: 0.82;
+            letter-spacing: -0.05em;
+            color: rgba(243, 241, 236, 0.06);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Eyebrow */
+        .pol-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+        .pol-eyebrow::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        /* Intro note */
+        .pol-intro-note {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.15rem, 2vw, 1.5rem);
+            line-height: 1.5;
+            letter-spacing: -0.005em;
+            color: #4f5c4e;
+            max-width: 42rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: #ffffff !important; color: #000000 !important; }
+            nav, footer, .chat-button, .chat-panel, .pol-toc, .pol-actions, .pol-progress, #loader { display: none !important; }
+            .pol-section { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="font-sans font-light bg-mist">
+
+    <!-- Reading progress -->
+    <div id="polProgress" class="pol-progress"></div>
+
+    <div id="loader" class="fixed inset-0 z-[100] bg-charcoal flex items-center justify-center text-mist flex-col pointer-events-none">
+        <img id="loader-logo"
+             src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white2.png"
+             alt="Singgah Sana"
+             class="h-28 md:h-48 lg:h-56 w-auto opacity-0 transform scale-110">
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-40 bg-transparent px-6 md:px-12 pt-6 pb-4 transition-transform duration-500 nav-visible">
+        <div class="flex justify-between items-center text-xs md:text-sm tracking-wide text-mist drop-shadow-md">
+            <div class="hidden md:block w-1/3 text-left uppercase tracking-widest text-[10px] md:text-xs font-medium opacity-90">
+                Traditional Malay private estate
+            </div>
+            <div class="w-1/2 md:w-1/3 text-left md:text-center font-serif text-xl md:text-2xl font-bold uppercase tracking-widest">
+                <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white.png" alt="Singgah Sana" class="h-8 md:h-20 w-auto inline-block" />
+            </div>
+            <div class="w-1/2 md:w-1/3 text-right flex justify-end">
+                <button id="menuBtn" class="flex items-center gap-2 hover:text-moss transition-colors duration-300 uppercase tracking-widest text-xs font-medium">
+                    <span>Menu</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="fixed inset-0 bg-charcoal text-mist z-50 flex flex-col justify-center items-center clip-menu-hidden transition-all duration-700">
+        <button id="closeBtn" class="absolute top-8 right-6 md:right-12 text-xs uppercase tracking-widest hover:text-seafoam transition-colors flex items-center gap-2">
+            <span>Close</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex flex-col space-y-5 md:space-y-7 text-center font-serif text-3xl md:text-5xl">
+            <a href="index.html" class="menu-link hover:text-seafoam transition-colors duration-300">Home</a>
+            <a href="private-estate.html" class="menu-link hover:text-seafoam transition-colors duration-300">Private Estate</a>
+            <a href="experience.html" class="menu-link hover:text-seafoam transition-colors duration-300">Experience</a>
+            <a href="events.html" class="menu-link hover:text-seafoam transition-colors duration-300">Events</a>
+            <a href="gallery.html" class="menu-link hover:text-seafoam transition-colors duration-300">Gallery</a>
+            <a href="faq.html" class="menu-link hover:text-seafoam transition-colors duration-300">FAQ</a>
+            <a href="contact.html" class="menu-link hover:text-seafoam transition-colors duration-300">Contact</a>
+        </div>
+    </div>
+
+    <main id="smooth-wrapper" class="bg-mist">
+        <div id="smooth-content">
+            
+           <!-- ============================================================
+                 HERO — BLOG (centered editorial, dark)
+                 ============================================================ -->
+            <section id="blog-hero" class="relative w-full min-h-screen bg-charcoal text-mist overflow-hidden flex flex-col">
+                <div class="absolute inset-0 texture-overlay opacity-20"></div>
+
+                <!-- Editorial number background -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blog-editorial-number pointer-events-none select-none">
+                </div>
+
+                <div class="relative z-10 flex-1 flex flex-col justify-center items-center px-6 md:px-12 pt-36 md:pt-44 pb-12 text-center">
+                    <div class="max-w-4xl mx-auto w-full">
+                        <div class="blog-eyebrow text-seafoam justify-center mb-10 reveal-fade" style="justify-content:center;">
+                            Lorem
+                        </div>
+                        <h1 class="font-serif leading-[1.02] tracking-tight mb-10 reveal-fade" style="font-size: clamp(2.75rem, 8vw, 7rem);">
+                            Policy<br>
+                        </h1>
+                        <p class="text-mist/60 font-light text-base md:text-lg leading-relaxed max-w-xl mx-auto reveal-fade">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 px-6 md:px-12 pb-10">
+                    <div class="max-w-4xl mx-auto flex items-end justify-between border-t border-mist/20 pt-6">
+                        <div class="text-[10px] tracking-[0.28em] uppercase text-mist/50">
+                            Lorem · Lorem
+                        </div>
+                        <div class="text-2xl text-mist/70">&darr;</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 POLICY LAYOUT — sticky TOC + content
+                 ============================================================ -->
+            <section id="policy-content" class="py-20 md:py-28 px-6 md:px-12 bg-mist relative">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="pol-layout">
+
+                        <!-- Sticky TOC -->
+                        <aside class="pol-toc reveal-fade">
+                            <div class="pol-toc__title">Contents</div>
+                            <ul class="pol-toc__list">
+                                <li>
+                                    <button class="pol-toc__link is-active" data-target="pol-01">
+                                        <span class="pol-toc__num">I</span>
+                                        <span>Booking & Payment</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-02">
+                                        <span class="pol-toc__num">II</span>
+                                        <span>Arrival & Departure</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-03">
+                                        <span class="pol-toc__num">III</span>
+                                        <span>During Your Stay</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-04">
+                                        <span class="pol-toc__num">IV</span>
+                                        <span>Cancellations</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-05">
+                                        <span class="pol-toc__num">V</span>
+                                        <span>Children & Pets</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-06">
+                                        <span class="pol-toc__num">VI</span>
+                                        <span>Events & Gatherings</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-07">
+                                        <span class="pol-toc__num">VII</span>
+                                        <span>Privacy & Data</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-08">
+                                        <span class="pol-toc__num">VIII</span>
+                                        <span>Liability</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="pol-toc__link" data-target="pol-09">
+                                        <span class="pol-toc__num">IX</span>
+                                        <span>Contact & Changes</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </aside>
+
+                        <!-- Content -->
+                        <div>
+                            <!-- Summary highlight -->
+                            <div class="pol-summary reveal-fade">
+                                <span class="pol-summary__label">In Short</span>
+                                <p class="pol-summary__text">
+                                    Singgah Sana is a private estate, not a hotel. The entire property is yours during your stay, and we ask only that you treat the house, the land, and the village with quiet care. Below is the full picture.
+                                </p>
+                            </div>
+
+                            <!-- Intro note -->
+                            <p class="pol-intro-note reveal-fade">
+                                These policies apply to every booking made at Singgah Sana, whether through our website, by direct enquiry, or through a partner. If anything here is unclear, write to us — we would rather clarify than have you guess.
+                            </p>
+
+                            <!-- I — Booking & Payment -->
+                            <div class="pol-section" id="pol-01">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">I</span>
+                                    <h2 class="pol-section__title">Booking &amp; Payment</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        All bookings at Singgah Sana are confirmed by a written agreement between us and the lead guest. The lead guest is responsible for the full booking, including the conduct of every person in their party.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">1.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Deposit.</strong> A 50% deposit is required to confirm your booking. The deposit is applied to the total cost of your stay and is non-refundable except as set out in Section IV.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">1.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Balance.</strong> The remaining balance is due 30 days before arrival. For bookings made within 30 days of arrival, the full amount is payable at the time of booking.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">1.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Security deposit.</strong> A refundable security deposit may be requested for event bookings or larger groups. This is returned within 7 days of departure, less any costs for damage or additional cleaning.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">1.4</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Methods.</strong> We accept bank transfer, credit card, and selected e-wallets. All rates are quoted in Malaysian Ringgit (MYR) and inclusive of applicable taxes.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- II — Arrival & Departure -->
+                            <div class="pol-section" id="pol-02">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">II</span>
+                                    <h2 class="pol-section__title">Arrival &amp; Departure</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        The estate is a home, prepared for you before you arrive. To give our team enough time to ready every pavilion, we keep to the following times.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">2.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Check-in.</strong> From 3:00 PM onwards. Earlier arrival may be possible on request, subject to availability.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">2.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Check-out.</strong> By 12:00 PM. Late departure may be arranged in advance and may incur an additional fee.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">2.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Directions.</strong> Precise directions and a location pin are shared with your booking confirmation. We recommend arriving before dark, particularly for first-time visitors to Janda Baik.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- III — During Your Stay -->
+                            <div class="pol-section" id="pol-03">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">III</span>
+                                    <h2 class="pol-section__title">During Your Stay</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        The estate is yours to enjoy quietly. To keep it a place worth returning to, we ask that you observe a few simple expectations.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">3.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Quiet hours.</strong> Between 11:00 PM and 7:00 AM, we ask that noise be kept low out of respect for the village and the forest. Amplified music is not permitted outdoors at any time.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">3.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Smoking.</strong> Smoking is not permitted inside any pavilion. Designated outdoor areas are available.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">3.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Alcohol.</strong> Alcohol is welcome and may be brought with you or arranged through us. Please drink responsibly.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">3.4</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Fire.</strong> Open fires are permitted only in the designated fire pit and only when attended. Guests are not permitted to light fires elsewhere on the estate.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">3.5</span>
+                                            <p class="pol-clause__text">
+                                                <strong>The river.</strong> Swimming in the river is at your own risk. Children must be supervised at all times near the water.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">3.6</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Wildlife.</strong> The estate is surrounded by forest. Please do not feed the wildlife and take care with your belongings in outdoor areas.
+                                            </p>
+                                        </li>
+                                    </ul>
+
+                                    <div class="pol-note reveal-fade">
+                                        <span class="pol-note__label">Note</span>
+                                        The estate is a working home with staff present during certain hours. We will always let you know in advance when someone will be on the grounds.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- IV — Cancellations -->
+                            <div class="pol-section" id="pol-04">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">IV</span>
+                                    <h2 class="pol-section__title">Cancellations</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        We understand that plans change. Our cancellation policy reflects the small scale of the estate — one booking, at most, at a time.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">4.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>More than 30 days before arrival.</strong> Full refund of any amount paid, less a small administrative fee.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">4.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Within 30 days of arrival.</strong> The deposit is non-refundable but may be transferred to another date within 12 months, subject to availability.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">4.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Within 7 days of arrival.</strong> No refund and no transfer. We encourage travel insurance for all bookings.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">4.4</span>
+                                            <p class="pol-clause__text">
+                                                <strong>By us.</strong> In the rare event that we must cancel your booking, you will receive a full refund of all amounts paid, or the option to move to alternative dates.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- V — Children & Pets -->
+                            <div class="pol-section" id="pol-05">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">V</span>
+                                    <h2 class="pol-section__title">Children &amp; Pets</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        The estate is a beautiful place for children and, on a case-by-case basis, for well-behaved pets.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">5.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Children.</strong> Warmly welcome. Cots, high chairs, and child-friendly meals can be arranged. Please let us know ages when you book so we can prepare the right pavilion.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">5.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Supervision.</strong> Children remain the responsibility of their parents or guardians at all times, particularly near the river, the fire pit, and the forest edge.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">5.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Pets.</strong> Well-behaved pets are welcome with prior arrangement and a small additional cleaning fee. Pets are not permitted on beds or upholstered furniture.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- VI — Events & Gatherings -->
+                            <div class="pol-section" id="pol-06">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">VI</span>
+                                    <h2 class="pol-section__title">Events &amp; Gatherings</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        Events at Singgah Sana are held under a separate agreement, in addition to this policy. The following applies to all gatherings.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">6.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Exclusivity.</strong> Every event booking includes exclusive use of the entire estate. There are never two events on the same day.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">6.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Vendors.</strong> We work with a trusted circle of local vendors, but you are welcome to bring your own, subject to a brief site induction. We do not charge vendor commissions either way.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">6.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Curfew.</strong> Amplified music must end by 11:00 PM. All guests other than overnight guests must depart by midnight.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">6.4</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Weather.</strong> All event layouts include a covered alternative. Events proceed in rain or shine.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- VII — Privacy & Data -->
+                            <div class="pol-section" id="pol-07">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">VII</span>
+                                    <h2 class="pol-section__title">Privacy &amp; Data</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        We collect only the information we need to host you well. We do not sell your data, and we do not use it for anything other than your stay.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">7.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>What we collect.</strong> Name, contact details, booking dates, guest count, and any preferences you share with us.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">7.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>How we use it.</strong> To prepare for your stay, to communicate with you, and to keep records required by law. We do not market to you without consent.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">7.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Retention.</strong> Booking records are kept for 7 years to meet Malaysian tax and hospitality requirements. Any additional information is deleted after your stay.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">7.4</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Photography.</strong> We never photograph guests or their belongings without permission. Any images taken at the estate for promotional purposes are always arranged in advance.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- VIII — Liability -->
+                            <div class="pol-section" id="pol-08">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">VIII</span>
+                                    <h2 class="pol-section__title">Liability</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        We take every reasonable care to keep the estate safe. The following outlines the limits of our responsibility.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">8.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Personal belongings.</strong> Singgah Sana is not responsible for loss or damage to personal belongings. Safes are provided in each pavilion.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">8.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Activities.</strong> Guests participate in estate activities (river swimming, forest walks, trekking) at their own risk. We recommend appropriate footwear and caution.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">8.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Force majeure.</strong> We are not liable for events beyond our control, including extreme weather, road closures, or government restrictions.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">8.4</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Damage.</strong> Guests are responsible for any damage to the estate or its contents caused during their stay. Repair or replacement costs will be charged at cost.
+                                            </p>
+                                        </li>
+                                    </ul>
+
+                                    <div class="pol-note reveal-fade">
+                                        <span class="pol-note__label">Recommendation</span>
+                                        We strongly recommend comprehensive travel insurance for all guests, covering cancellation, medical, and personal belongings.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- IX — Contact & Changes -->
+                            <div class="pol-section" id="pol-09">
+                                <div class="pol-section__header reveal-fade">
+                                    <span class="pol-section__num">IX</span>
+                                    <h2 class="pol-section__title">Contact &amp; Changes</h2>
+                                </div>
+                                <div class="pol-body">
+                                    <p class="reveal-fade">
+                                        This policy may be updated from time to time. The version in effect at the time of your booking is the version that applies to your stay. Significant changes will be communicated by email to guests with active bookings.
+                                    </p>
+                                    <p class="reveal-fade">
+                                        For any questions about this policy, or to request a copy in a different format, please reach us at the details below.
+                                    </p>
+
+                                    <ul class="pol-clauses">
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">9.1</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Email.</strong> hello@singgah-sana.com
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">9.2</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Post.</strong> No.3 Lorong Cheringin, Kampung Janda Baik, 28750 Bentong, Pahang, Malaysia.
+                                            </p>
+                                        </li>
+                                        <li class="pol-clause reveal-fade">
+                                            <span class="pol-clause__mark">9.3</span>
+                                            <p class="pol-clause__text">
+                                                <strong>Version control.</strong> This is Version 3.0, effective 01 March 2026. Previous versions are available on request.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="pol-actions reveal-fade">
+                                <button class="pol-action pol-action--primary" id="polPrint">
+                                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+                                    Print This Policy
+                                </button>
+                                <a href="contact.html" class="pol-action">
+                                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                                    Ask a Question
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CTA — closing
+                 ============================================================ -->
+            <section id="policy-cta" class="py-24 md:py-32 px-6 md:px-12 bg-charcoal text-mist relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-20"></div>
+                <div class="max-w-4xl mx-auto relative z-10 text-center">
+                    <span class="text-[10px] tracking-[0.3em] uppercase text-seafoam font-medium mb-8 block reveal-fade">
+                        Thank You
+                    </span>
+                    <h2 class="split-text font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-10">
+                        Now that's <em class="text-seafoam">clear</em>.
+                    </h2>
+                    <p class="text-mist/60 font-light text-base md:text-lg max-w-xl mx-auto mb-12 reveal-fade">
+                        If you've read this far, you already understand the estate better than most. 
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 reveal-fade">
+                        <a href="contact.html" class="inline-block bg-mist text-moss px-10 py-4 text-[10px] tracking-[0.28em] uppercase font-medium hover:bg-seafoam hover:text-charcoal transition-all duration-500">
+                            Enquire to Stay
+                        </a>
+                        <a href="faq.html" class="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-mist border-b border-mist/40 pb-1 hover:gap-5 hover:border-seafoam hover:text-seafoam transition-all duration-500">
+                            Read the FAQ
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+             <footer id="availability" class="bg-moss text-mist pt-24 pb-12 px-6 md:px-12 relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div id="enquire" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-24 border-b border-mist/20 pb-24">
+                        <div>
+                            <span class="text-[10px] tracking-[0.2em] uppercase text-seafoam mb-8 block reveal-fade">Enquire</span>
+                            <h2 class="font-serif text-5xl md:text-6xl mb-8 leading-[1.1] text-mist tracking-tight split-text">
+                                Begin your <em class="text-seafoam">stay</em>.
+                            </h2>
+                            <p class="text-mist/70 font-light text-base md:text-lg max-w-md mb-10 reveal-fade">
+                                The entire estate can be yours. Enquire about availability, rates, and bespoke experiences.
+                            </p>
+                            <a href="contact.html" class="reveal-fade inline-block border border-mist px-8 py-4 text-xs tracking-[0.2em] uppercase hover:bg-mist hover:text-moss transition-all duration-300">
+                                Contact Us
+                            </a>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 lg:justify-end mt-8 lg:mt-16">
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Discover</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="about.html" class="footer-link">About</a></li>
+                                    <li><a href="blog.html" class="footer-link">Journal</a></li>
+                                    <li><a href="faq.html" class="footer-link">FAQ</a></li>
+                                    <li><a href="policy.html" class="footer-link">Policy</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Contact</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="#" class="footer-link">hello@singgah-sana.com</a></li>
+                                    <li><a href="#" class="footer-link">+60 00000000</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Location</h4>
+                                <address class="not-italic font-light text-mist/80 text-base leading-relaxed">
+                                    No.3 Lorong Cheringin<br>
+                                    Kampung Janda Baik<br>
+                                    28750 Bentong, Pahang<br>
+                                    Malaysia
+                                </address>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-center text-[10px] text-mist/50 uppercase tracking-[0.2em] font-medium reveal-fade">
+                        <p class="mb-4 md:mb-0">&copy; 2026 Singgah Sana. All rights reserved.</p>
+                        <div class="flex flex-wrap gap-6 justify-center">
+                            <a href="#" class="hover:text-mist transition-colors">Instagram</a>
+                            <a href="#" class="hover:text-mist transition-colors">Facebook</a>
+                            <a href="#" class="hover:text-mist transition-colors">TripAdvisor</a>
+                            <a href="#" class="hover:text-mist transition-colors">TikTok</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- LIVE CHAT -->
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-header">
+            <div>
+                <div class="chat-header-title">Live Chat Singgah Sana</div>
+                <div class="chat-header-status">Online · Replies within minutes</div>
+            </div>
+            <button id="chatClose" class="chat-close" aria-label="Close chat">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="chatBody" class="chat-body"></div>
+
+        <div class="chat-input-wrap">
+            <div class="chat-input-row">
+                <textarea id="chatInput" class="chat-input" rows="1" placeholder="Write a message..."></textarea>
+                <button id="chatSend" class="chat-send" aria-label="Send">
+                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            Lorem ipsum
+        </div>
+    </div>
+
+    <button id="chatButton" class="chat-button" aria-label="Open chat">
+        <svg viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+        </svg>
+        <span>Live Chat</span>
+    </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            gsap.config({ force3D: true });
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+            gsap.ticker.lagSmoothing(0); 
+
+            document.body.style.overflow = "hidden";
+
+            // Loader
+            const tlLoader = gsap.timeline({
+                onComplete: () => {
+                    document.body.style.overflow = ""; 
+                }
+            });
+
+            tlLoader
+                .to("#loader-logo", { opacity: 1, scale: 1.5, duration: 2, ease: "power3.out" })
+                .to("#loader-logo", { opacity: 0, y: -30, duration: 1, ease: "power2.inOut" }, "+=0.5")
+                .to("#loader", { yPercent: -100, duration: 1, ease: "power3.inOut" });
+
+            // Navbar
+            let lastScroll = 0;
+            const navbar = document.getElementById('navbar');
+            
+            lenis.on('scroll', (e) => {
+                const currentScroll = e.animatedScroll;
+                if (!document.getElementById('menuOverlay').classList.contains('clip-menu-visible')) {
+                    if (currentScroll > 50) {
+                        navbar.classList.replace('bg-transparent', 'bg-charcoal');
+                        if (currentScroll > lastScroll) {
+                            navbar.classList.remove('nav-visible');
+                            navbar.classList.add('nav-hidden');
+                        } else {
+                            navbar.classList.remove('nav-hidden');
+                            navbar.classList.add('nav-visible');
+                        }
+                    } else {
+                        navbar.classList.replace('bg-charcoal', 'bg-transparent');
+                        navbar.classList.remove('nav-hidden');
+                        navbar.classList.add('nav-visible');
+                    }
+                }
+                lastScroll = currentScroll;
+            });
+
+            // Menu
+            const menuBtn = document.getElementById('menuBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            function toggleMenu() {
+                menuOverlay.classList.toggle('clip-menu-visible');
+                menuOverlay.classList.toggle('clip-menu-hidden');
+                
+                if(menuOverlay.classList.contains('clip-menu-visible')) {
+                    lenis.stop();
+                } else {
+                    lenis.start();
+                }
+            }
+
+            menuBtn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuOverlay.classList.remove('clip-menu-visible');
+                    menuOverlay.classList.add('clip-menu-hidden');
+                    lenis.start();
+                });
+            });
+
+            // Typography Reveals
+            const splitHeadings = new SplitType('.split-text', { types: 'lines' });
+            
+            const wrapLines = (splitInstance) => {
+                splitInstance.lines.forEach(line => {
+                    if (!line.parentElement.classList.contains('line-wrapper')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('line-wrapper');
+                        line.parentNode.insertBefore(wrapper, line);
+                        wrapper.appendChild(line);
+                        gsap.set(line, { yPercent: 120, rotationZ: 2, opacity: 0 });
+                    }
+                });
+            };
+
+            wrapLines(splitHeadings);
+
+            ScrollTrigger.batch(splitHeadings.elements, {
+                start: "top 85%",
+                onEnter: batch => {
+                    batch.forEach(el => {
+                        gsap.to(el.querySelectorAll('.line'), {
+                            yPercent: 0, rotationZ: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: "power3.out"
+                        });
+                    });
+                }
+            });
+
+            // Fade in
+            ScrollTrigger.batch('.reveal-fade', {
+                start: "top 92%",
+                onEnter: batch => {
+                    gsap.fromTo(batch, 
+                        { y: 24, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: "power2.out", overwrite: true }
+                    );
+                }
+            });
+
+            // ============================================================
+            // POLICY TOC — scroll to section
+            // ============================================================
+            const polTocLinks = document.querySelectorAll('.pol-toc__link');
+
+            function setActiveToc(targetId) {
+                polTocLinks.forEach(l => l.classList.remove('is-active'));
+                const active = document.querySelector(`.pol-toc__link[data-target="${targetId}"]`);
+                if (active) active.classList.add('is-active');
+            }
+
+            polTocLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const targetId = link.getAttribute('data-target');
+                    const targetEl = document.getElementById(targetId);
+                    setActiveToc(targetId);
+                    if (targetEl) {
+                        lenis.scrollTo(targetEl, { offset: -100, duration: 1.4 });
+                    }
+                });
+            });
+
+            // Scroll-spy TOC
+            document.querySelectorAll('.pol-section').forEach(section => {
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: "top 40%",
+                    end: "bottom 40%",
+                    onEnter: () => setActiveToc(section.id),
+                    onEnterBack: () => setActiveToc(section.id)
+                });
+            });
+
+            // ============================================================
+            // READING PROGRESS
+            // ============================================================
+            const polProgress = document.getElementById('polProgress');
+            const policyContent = document.getElementById('policy-content');
+
+            function updateProgress() {
+                if (!polProgress || !policyContent) return;
+                const rect = policyContent.getBoundingClientRect();
+                const total = policyContent.offsetHeight - window.innerHeight;
+                const scrolled = Math.max(0, -rect.top);
+                const progress = Math.min(100, (scrolled / total) * 100);
+                polProgress.style.width = progress + '%';
+            }
+
+            lenis.on('scroll', updateProgress);
+            window.addEventListener('resize', updateProgress);
+            updateProgress();
+
+            // ============================================================
+            // PRINT
+            // ============================================================
+            const polPrint = document.getElementById('polPrint');
+            if (polPrint) {
+                polPrint.addEventListener('click', () => {
+                    window.print();
+                });
+            }
+
+            // Resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    splitHeadings.revert();
+                    splitHeadings.split();
+                    wrapLines(splitHeadings);
+                    ScrollTrigger.refresh();
+                }, 200);
+            });
+
+            // ============================================================
+            // LIVE CHAT — Concierge
+            // ============================================================
+            const chatPanel = document.getElementById('chatPanel');
+            const chatButton = document.getElementById('chatButton');
+            const chatClose = document.getElementById('chatClose');
+            const chatBody = document.getElementById('chatBody');
+            const chatInput = document.getElementById('chatInput');
+            const chatSend = document.getElementById('chatSend');
+
+            let chatOpen = false;
+            let isTyping = false;
+            const CHAT_STORAGE_KEY = 'singgahChatHistory_v1';
+
+            let chatHistory = [];
+            try {
+                chatHistory = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+            } catch (e) {
+                chatHistory = [];
+            }
+
+            function getTimeString() {
+                const now = new Date();
+                return now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const initialBotMessages = [
+                {
+                    type: 'bot',
+                    text: 'Welcome to Singgah Sana. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    time: getTimeString()
+                },
+                {
+                    type: 'bot',
+                    text: 'How may I assist you today?',
+                    time: getTimeString(),
+                    quickReplies: ['Lorem', 'Lorem', 'Lorem', 'Lorem']
+                }
+            ];
+
+            function getBotReply(userText) {
+                const lower = userText.toLowerCase().trim();
+
+                if (/^(hi|hello|hey|good morning|good afternoon|good evening|greetings|selamat|hai)/.test(lower)) {
+                    return {
+                        text: 'Hello, lorem ipsum dolor sit amet consectetur adipiscing elit sed do?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(book|reserve|reservation|stay|room|pavilion|accommodation|available|availability|check.?in|check.?out)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(rate|price|cost|how much|pricing|fee|expensive|cheap|budget)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Cancellation policy']
+                    };
+                }
+
+                if (/(cancel|cancellation|refund|policy|deposit|penalty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See full policy', 'Ask another question']
+                    };
+                }
+
+                if (/(where|location|address|directions|how to get|far|distance|near|map|janda baik|bentong|pahang|kl|kuala lumpur)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Open in Maps', 'Airport transfer', 'Ask another question']
+                    };
+                }
+
+                if (/(activit|experience|things to do|do there|what can i do|yoga|fishing|hike|hiking|picnic|walk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See experiences', 'Book a stay']
+                    };
+                }
+
+                if (/(event|wedding|marriage|engagement|private dinner|meeting|conference|workshop|corporate|celebrat)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See events', 'Send an enquiry']
+                    };
+                }
+
+                if (/(child|children|kid|family|baby|infant|toddler)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(pet|dog|cat|animal)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(amenit|facilit|provide|include|wifi|wi-fi|air.?con|ac|towel|robe|toiletr|bedding|net|safe|incense|desk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(food|dining|dinner|lunch|breakfast|chef|meal|eat|menu|vegetarian|vegan|halal|allerg)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Book a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(accessib|wheelchair|mobility|disabled|elderly|walking difficulty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(airport|transfer|pickup|pick up|taxi|grab|transport|driver)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(wi.?fi|internet|connection|online)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Ask another question']
+                    };
+                }
+
+                if (/(thank|thanks|appreciat|grateful)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Goodbye']
+                    };
+                }
+
+                if (/(bye|goodbye|see you|farewell|that.s all|nothing else)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                    };
+                }
+
+                if (/(see room|see rooms|show rooms|open rooms)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'room.html'
+                    };
+                }
+
+                if (/(see experience|show experience|open experience|see experiences)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'experience.html'
+                    };
+                }
+
+                if (/(see event|show event|open event|see events|send.*enquir)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'events.html'
+                    };
+                }
+
+                if (/(see.*polic|open.*polic)/.test(lower)) {
+                    return {
+                        text: 'Opening our policy page for you now.',
+                        redirect: 'policy.html'
+                    };
+                }
+
+                if (/(map|open.*map|direction)/.test(lower)) {
+                    return {
+                        text: 'Opening our location in Maps for you now.',
+                        redirect: 'https://maps.app.goo.gl/U5hAkqrDFPQwzhny7'
+                    };
+                }
+
+                if (/(book a stay|booking a stay|reserve|make.*book)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        redirect: 'room.html'
+                    };
+                }
+
+                return {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                    quickReplies: ['Booking a stay', 'Things to do', 'Getting here']
+                };
+            }
+
+            function renderChat() {
+                if (chatHistory.length === 0) {
+                    chatHistory = [...initialBotMessages];
+                    saveChat();
+                }
+
+                chatBody.innerHTML = '';
+
+                chatHistory.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = `chat-msg chat-msg--${msg.type}`;
+
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-msg__bubble';
+                    bubble.textContent = msg.text;
+                    div.appendChild(bubble);
+
+                    if (msg.quickReplies && msg.quickReplies.length > 0) {
+                        const quick = document.createElement('div');
+                        quick.className = 'chat-quick';
+                        msg.quickReplies.forEach(reply => {
+                            const btn = document.createElement('button');
+                            btn.textContent = reply;
+                            btn.addEventListener('click', () => handleQuickReply(reply));
+                            quick.appendChild(btn);
+                        });
+                        div.appendChild(quick);
+                    }
+
+                    const time = document.createElement('div');
+                    time.className = 'chat-msg__time';
+                    time.textContent = msg.time || '';
+                    div.appendChild(time);
+
+                    chatBody.appendChild(div);
+                });
+
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function saveChat() {
+                try {
+                    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+                } catch (e) {}
+            }
+
+            function addMessage(msg) {
+                chatHistory.push(msg);
+                saveChat();
+                renderChat();
+            }
+
+            function showTyping() {
+                const typing = document.createElement('div');
+                typing.className = 'chat-typing';
+                typing.id = 'chatTyping';
+                typing.innerHTML = '<span></span><span></span><span></span>';
+                chatBody.appendChild(typing);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+            function hideTyping() {
+                const t = document.getElementById('chatTyping');
+                if (t) t.remove();
+            }
+
+            function handleQuickReply(reply) {
+                addMessage({
+                    type: 'user',
+                    text: reply,
+                    time: getTimeString()
+                });
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(reply);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 500);
+            }
+
+            function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text || isTyping) return;
+
+                addMessage({
+                    type: 'user',
+                    text: text,
+                    time: getTimeString()
+                });
+
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(text);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 600);
+            }
+
+            function openChat() {
+                chatOpen = true;
+                chatPanel.classList.add('is-open');
+                chatButton.classList.add('is-hidden');
+                setTimeout(() => chatInput.focus(), 400);
+            }
+
+            function closeChat() {
+                chatOpen = false;
+                chatPanel.classList.remove('is-open');
+                chatButton.classList.remove('is-hidden');
+            }
+
+            chatButton.addEventListener('click', openChat);
+            chatClose.addEventListener('click', closeChat);
+            chatSend.addEventListener('click', sendMessage);
+
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            chatInput.addEventListener('input', () => {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
+            });
+
+            const hasAutoOpened = sessionStorage.getItem('singgahChatAutoOpened');
+            if (!hasAutoOpened && window.innerWidth > 1024) {
+                setTimeout(() => {
+                    if (!chatOpen) {
+                        openChat();
+                        sessionStorage.setItem('singgahChatAutoOpened', '1');
+                    }
+                }, 12000);
+            }
+
+            renderChat();
+        });
+    </script>
+</body>
+</html>

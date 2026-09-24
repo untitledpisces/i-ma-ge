@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Detail 1 | Singgah Sana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mist': '#f3f1ec',
+                        'seafoam': '#95c9b9',
+                        'moss': '#4f5c4e',
+                        'charcoal': '#2d2a26',
+                        'sand': '#e8e2d5',
+                        'clay': '#c9a88a',
+                        'ink': '#1a1815',
+                        'paper': '#faf8f4',
+                    },
+                    fontFamily: {
+                        serif: ['Marcellus', 'serif'],
+                        sans: ['"Work Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f3f1ec;
+            color: #2d2a26;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+        .line-wrapper {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: top;
+            padding-bottom: 0.1em;
+        }
+        
+        .img-reveal-container {
+            overflow: hidden;
+            position: relative;
+            transform: translateZ(0);
+            background-color: rgba(45, 42, 38, 0.1);
+        }
+
+        ::selection { background-color: #4f5c4e; color: #f3f1ec; }
+        
+        .nav-hidden { transform: translate3d(0, -100%, 0); }
+        .nav-visible { transform: translate3d(0, 0, 0); }
+
+        .clip-menu-hidden { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+        .clip-menu-visible { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+        .texture-overlay {
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           FOOTER LINKS
+           ============================================================ */
+        .footer-link {
+            display: inline-block;
+            font-size: 0.95rem;
+            color: rgba(243, 241, 236, 0.75);
+            transition: color 0.4s, padding-left 0.4s;
+            position: relative;
+        }
+        .footer-link:hover {
+            color: #f3f1ec;
+            padding-left: 8px;
+        }
+        .footer-link::before {
+            content: '·';
+            position: absolute;
+            left: -4px;
+            opacity: 0;
+            transition: opacity 0.4s, left 0.4s;
+            color: #95c9b9;
+        }
+        .footer-link:hover::before {
+            opacity: 1;
+            left: -8px;
+        }
+
+        /* ============================================================
+           LIVE CHAT
+           ============================================================ */
+        .chat-button {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 60;
+            height: 52px;
+            padding: 0 20px 0 16px;
+            border-radius: 999px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(45, 42, 38, 0.28);
+            transition: background 0.4s, transform 0.4s, box-shadow 0.4s, opacity 0.4s;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+        }
+        .chat-button:hover {
+            background: #2d2a26;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(45, 42, 38, 0.35);
+        }
+        .chat-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 1.75;
+            fill: none;
+        }
+        .chat-button::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 999px;
+            border: 1px solid #95c9b9;
+            opacity: 0;
+            animation: chatPulse 3.4s ease-out infinite;
+            pointer-events: none;
+        }
+        @keyframes chatPulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 0; transform: scale(1.15); }
+        }
+        .chat-button.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 92px;
+            left: 24px;
+            z-index: 61;
+            width: 400px;
+            max-width: calc(100vw - 48px);
+            height: 600px;
+            max-height: calc(100vh - 140px);
+            background: #f3f1ec;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 60px rgba(45, 42, 38, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.98);
+            transform-origin: bottom left;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0.4s,
+                        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .chat-panel.is-open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .chat-header {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 20px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-header-title {
+            font-family: 'Marcellus', serif;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+        }
+        .chat-header-status {
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            font-family: 'Work Sans', sans-serif;
+        }
+        .chat-header-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #95c9b9;
+            animation: chatStatusPulse 2s ease-in-out infinite;
+        }
+        @keyframes chatStatusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: #f3f1ec;
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.75;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .chat-close:hover { opacity: 1; }
+        .chat-close svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #f3f1ec;
+            scroll-behavior: smooth;
+        }
+        .chat-body::-webkit-scrollbar { width: 4px; }
+        .chat-body::-webkit-scrollbar-thumb {
+            background: rgba(79, 92, 78, 0.25);
+            border-radius: 2px;
+        }
+
+        .chat-msg {
+            max-width: 86%;
+            font-size: 13.5px;
+            line-height: 1.55;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        @keyframes msgIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-msg--bot { align-self: flex-start; }
+        .chat-msg--user { align-self: flex-end; }
+        .chat-msg__bubble {
+            padding: 12px 16px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 300;
+            border-radius: 2px;
+        }
+        .chat-msg--bot .chat-msg__bubble {
+            background: #ffffff;
+            color: #2d2a26;
+            border-left: 2px solid #4f5c4e;
+        }
+        .chat-msg--user .chat-msg__bubble {
+            background: #4f5c4e;
+            color: #f3f1ec;
+        }
+        .chat-msg__time {
+            font-size: 9px;
+            color: rgba(45, 42, 38, 0.4);
+            margin-top: 5px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        .chat-msg--user .chat-msg__time { text-align: right; }
+
+        .chat-typing {
+            align-self: flex-start;
+            max-width: 86%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-left: 2px solid #4f5c4e;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            opacity: 0;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .chat-typing span {
+            width: 6px;
+            height: 6px;
+            background: #4f5c4e;
+            border-radius: 50%;
+            opacity: 0.35;
+            animation: typingBounce 1.2s ease-in-out infinite;
+        }
+        .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-quick {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .chat-quick button {
+            background: transparent;
+            border: 1px solid rgba(79, 92, 78, 0.3);
+            color: #4f5c4e;
+            padding: 7px 13px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            border-radius: 2px;
+        }
+        .chat-quick button:hover {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+
+        .chat-input-wrap {
+            border-top: 1px solid rgba(79, 92, 78, 0.15);
+            padding: 14px 18px;
+            background: #f3f1ec;
+            flex-shrink: 0;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13.5px;
+            color: #2d2a26;
+            padding: 8px 0;
+            resize: none;
+            outline: none;
+            max-height: 80px;
+            line-height: 1.5;
+        }
+        .chat-input::placeholder { color: rgba(45, 42, 38, 0.4); }
+        .chat-send {
+            width: 38px;
+            height: 38px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.3s;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+        .chat-send:hover {
+            background: #2d2a26;
+            transform: translateY(-1px);
+        }
+        .chat-send svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        .chat-send:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .chat-footer {
+            text-align: center;
+            padding: 10px 20px 14px;
+            font-size: 9.5px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.5);
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .chat-panel {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                bottom: 0;
+                right: 0;
+                top: 0;
+                left: 0;
+            }
+            .chat-button {
+                bottom: 20px;
+                left: 20px;
+                height: 48px;
+                padding: 0 16px 0 14px;
+                font-size: 10px;
+            }
+            .chat-panel.is-open ~ .chat-button {
+                display: none;
+            }
+        }
+
+        /* ============================================================
+           ROOM DETAILS — UI/UX KHUSUS
+           ============================================================ */
+
+        /* Breadcrumb */
+        .rd-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(243, 241, 236, 0.55);
+        }
+        .rd-breadcrumb a {
+            color: rgba(243, 241, 236, 0.7);
+            text-decoration: none;
+            transition: color 0.4s;
+        }
+        .rd-breadcrumb a:hover {
+            color: #95c9b9;
+        }
+        .rd-breadcrumb__sep {
+            opacity: 0.4;
+        }
+
+        /* Hero split layout — image kiri, judul kanan */
+        .rd-hero-split {
+            display: grid;
+            grid-template-columns: 1fr;
+            min-height: 100vh;
+        }
+        @media (min-width: 1024px) {
+            .rd-hero-split {
+                grid-template-columns: 1.35fr 1fr;
+            }
+        }
+
+        .rd-hero-media {
+            position: relative;
+            min-height: 60vh;
+            overflow: hidden;
+            background: #1a1815;
+        }
+        @media (min-width: 1024px) {
+            .rd-hero-media {
+                min-height: 100vh;
+            }
+        }
+        .rd-hero-media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rd-hero-panel {
+            background: #2d2a26;
+            color: #f3f1ec;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 5rem 2rem 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        @media (min-width: 1024px) {
+            .rd-hero-panel {
+                padding: 6rem 4rem;
+            }
+        }
+
+        /* Title block */
+        .rd-title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(2.75rem, 6vw, 5rem);
+            line-height: 1.02;
+            letter-spacing: -0.02em;
+            color: #f3f1ec;
+            margin-bottom: 1rem;
+        }
+        .rd-subtitle {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1rem, 1.5vw, 1.15rem);
+            color: #95c9b9;
+            letter-spacing: 0.02em;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Spec quick row */
+        .rd-quick-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem 2rem;
+            padding: 2.5rem 0;
+            border-top: 1px solid rgba(243, 241, 236, 0.15);
+            border-bottom: 1px solid rgba(243, 241, 236, 0.15);
+            margin-bottom: 2.5rem;
+        }
+        @media (min-width: 640px) {
+            .rd-quick-specs {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .rd-quick-spec {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .rd-quick-spec__label {
+            font-size: 9.5px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(243, 241, 236, 0.5);
+        }
+        .rd-quick-spec__value {
+            font-family: 'Marcellus', serif;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: #f3f1ec;
+            letter-spacing: -0.01em;
+        }
+
+        /* Price block */
+        .rd-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        .rd-price__amount {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: #f3f1ec;
+        }
+        .rd-price__unit {
+            font-size: 11px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(243, 241, 236, 0.55);
+        }
+
+        /* CTA buttons */
+        .rd-cta-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        @media (min-width: 640px) {
+            .rd-cta-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+        .rd-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            padding: 1.25rem 2rem;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.4s, color 0.4s, border-color 0.4s, gap 0.4s;
+            flex: 1;
+            min-width: 180px;
+        }
+        .rd-cta svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        .rd-cta--primary {
+            background: #f3f1ec;
+            color: #4f5c4e;
+            border: 1px solid #f3f1ec;
+        }
+        .rd-cta--primary:hover {
+            background: #95c9b9;
+            border-color: #95c9b9;
+            color: #2d2a26;
+            gap: 1.25rem;
+        }
+        .rd-cta--secondary {
+            background: transparent;
+            color: #f3f1ec;
+            border: 1px solid rgba(243, 241, 236, 0.3);
+        }
+        .rd-cta--secondary:hover {
+            background: #f3f1ec;
+            color: #4f5c4e;
+            border-color: #f3f1ec;
+            gap: 1.25rem;
+        }
+
+        /* Thumbnail strip — bottom of hero */
+        .rd-thumbs {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(243, 241, 236, 0.15);
+        }
+        .rd-thumb {
+            flex: 1;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: #1a1815;
+            border: 1px solid transparent;
+            cursor: pointer;
+            padding: 0;
+            transition: border-color 0.4s, opacity 0.4s;
+            opacity: 0.6;
+        }
+        .rd-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .rd-thumb:hover {
+            opacity: 1;
+        }
+        .rd-thumb.is-active {
+            border-color: #95c9b9;
+            opacity: 1;
+        }
+
+        /* Content section — two column: main + sticky booking */
+        .rd-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+        }
+        @media (min-width: 1024px) {
+            .rd-layout {
+                grid-template-columns: 1fr 380px;
+                gap: 6rem;
+            }
+        }
+
+        /* Sticky booking panel */
+        .rd-booking-panel {
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .rd-booking-panel {
+                position: sticky;
+                top: 120px;
+                align-self: start;
+            }
+        }
+
+        .rd-booking-card {
+            background: #2d2a26;
+            color: #f3f1ec;
+            padding: 2.25rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .rd-booking-card__label {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            margin-bottom: 1.25rem;
+            display: block;
+        }
+        .rd-booking-card__title {
+            font-family: 'Marcellus', serif;
+            font-size: 1.75rem;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+        .rd-booking-card__sub {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: rgba(243, 241, 236, 0.6);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        .rd-booking-field {
+            margin-bottom: 1.5rem;
+        }
+        .rd-booking-field label {
+            display: block;
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(243, 241, 236, 0.55);
+            margin-bottom: 0.75rem;
+        }
+        .rd-booking-field input,
+        .rd-booking-field select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(243, 241, 236, 0.25);
+            padding: 0.5rem 0 0.85rem;
+            font-family: 'Marcellus', serif;
+            font-size: 1.05rem;
+            color: #f3f1ec;
+            letter-spacing: -0.005em;
+            outline: none;
+            transition: border-color 0.4s;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+        .rd-booking-field input::placeholder {
+            color: rgba(243, 241, 236, 0.35);
+            font-style: italic;
+        }
+        .rd-booking-field input:focus,
+        .rd-booking-field select:focus {
+            border-bottom-color: #95c9b9;
+        }
+        .rd-booking-field select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2395c9b9' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+        }
+        .rd-booking-field select option {
+            background: #2d2a26;
+            color: #f3f1ec;
+        }
+        .rd-booking-submit {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1.15rem 2rem;
+            background: #f3f1ec;
+            color: #2d2a26;
+            border: none;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.4s, color 0.4s, gap 0.4s;
+            margin-top: 0.5rem;
+        }
+        .rd-booking-submit:hover {
+            background: #95c9b9;
+            gap: 1.15rem;
+        }
+        .rd-booking-submit svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        .rd-booking-note {
+            font-size: 0.78rem;
+            line-height: 1.55;
+            color: rgba(243, 241, 236, 0.5);
+            margin-top: 1.25rem;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        /* Main content sections */
+        .rd-section {
+            padding: 3.5rem 0;
+            border-top: 1px solid rgba(45, 42, 38, 0.12);
+        }
+        .rd-section:first-child {
+            padding-top: 0;
+            border-top: none;
+        }
+        .rd-section__label {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.6);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .rd-section__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            color: #2d2a26;
+            margin-bottom: 1.75rem;
+        }
+        .rd-section__body {
+            font-weight: 300;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(45, 42, 38, 0.72);
+            max-width: 52rem;
+        }
+        .rd-section__body p + p {
+            margin-top: 1.25rem;
+        }
+
+        /* Amenity grid */
+        .rd-amenities {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            border-top: 1px solid rgba(45, 42, 38, 0.12);
+        }
+        @media (min-width: 640px) {
+            .rd-amenities {
+                grid-template-columns: repeat(2, 1fr);
+                column-gap: 3rem;
+            }
+        }
+        .rd-amenity {
+            display: grid;
+            grid-template-columns: 28px 1fr;
+            gap: 1rem;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(45, 42, 38, 0.08);
+            align-items: start;
+        }
+        .rd-amenity__icon {
+            width: 22px;
+            height: 22px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .rd-amenity__icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #4f5c4e;
+            stroke-width: 1.75;
+            fill: none;
+        }
+        .rd-amenity__title {
+            font-family: 'Marcellus', serif;
+            font-size: 1rem;
+            line-height: 1.3;
+            letter-spacing: -0.005em;
+            color: #2d2a26;
+            margin-bottom: 0.25rem;
+        }
+        .rd-amenity__desc {
+            font-weight: 300;
+            font-size: 0.85rem;
+            line-height: 1.55;
+            color: rgba(45, 42, 38, 0.6);
+        }
+
+        /* Tabs */
+        .rd-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            border-bottom: 1px solid rgba(45, 42, 38, 0.15);
+            margin-bottom: 2.5rem;
+        }
+        .rd-tab {
+            position: relative;
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: rgba(45, 42, 38, 0.45);
+            cursor: pointer;
+            transition: color 0.4s;
+        }
+        .rd-tab:first-child { padding-left: 0; }
+        .rd-tab:hover { color: #2d2a26; }
+        .rd-tab::after {
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            right: 1.5rem;
+            bottom: -1px;
+            height: 2px;
+            background: #4f5c4e;
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .rd-tab:first-child::after { left: 0; }
+        .rd-tab.is-active { color: #4f5c4e; }
+        .rd-tab.is-active::after { transform: scaleX(1); }
+        .rd-tab-panel {
+            display: none;
+        }
+        .rd-tab-panel.is-active {
+            display: block;
+        }
+
+        /* Floor plan / dimension block */
+        .rd-plan {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2.5rem 0;
+            border-top: 1px solid rgba(45, 42, 38, 0.12);
+            border-bottom: 1px solid rgba(45, 42, 38, 0.12);
+        }
+        @media (min-width: 768px) {
+            .rd-plan {
+                grid-template-columns: 1.3fr 1fr;
+                gap: 4rem;
+                align-items: center;
+            }
+        }
+        .rd-plan__media {
+            aspect-ratio: 4/3;
+            background: rgba(79, 92, 78, 0.08);
+            overflow: hidden;
+        }
+        .rd-plan__media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .rd-plan__stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .rd-plan__stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(45, 42, 38, 0.1);
+        }
+        .rd-plan__stat:last-child { border-bottom: none; }
+        .rd-plan__stat-label {
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(45, 42, 38, 0.55);
+        }
+        .rd-plan__stat-value {
+            font-family: 'Marcellus', serif;
+            font-size: 1.15rem;
+            color: #2d2a26;
+            letter-spacing: -0.005em;
+        }
+
+        /* Related pavilions */
+        .rd-related {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        @media (min-width: 640px) {
+            .rd-related {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .rd-related-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .rd-related-card__media {
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            background: rgba(45, 42, 38, 0.08);
+            margin-bottom: 1.25rem;
+        }
+        .rd-related-card__media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .rd-related-card:hover .rd-related-card__media img {
+            transform: scale(1.05);
+        }
+        .rd-related-card__name {
+            font-family: 'Marcellus', serif;
+            font-size: 1.25rem;
+            letter-spacing: -0.01em;
+            color: #2d2a26;
+            margin-bottom: 0.35rem;
+            transition: color 0.4s;
+        }
+        .rd-related-card:hover .rd-related-card__name {
+            color: #4f5c4e;
+        }
+        .rd-related-card__meta {
+            font-size: 10px;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.6);
+        }
+
+        /* Lightbox */
+        .rd-lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(26, 24, 21, 0.96);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+            padding: 2rem;
+        }
+        .rd-lightbox.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .rd-lightbox__inner {
+            position: relative;
+            max-width: 92vw;
+            max-height: 88vh;
+        }
+        .rd-lightbox__img {
+            display: block;
+            max-width: 92vw;
+            max-height: 88vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+        .rd-lightbox__close {
+            position: absolute;
+            top: -3rem;
+            right: 0;
+            background: none;
+            border: none;
+            color: #f3f1ec;
+            cursor: pointer;
+            padding: 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+        }
+        .rd-lightbox__close:hover { opacity: 1; }
+        .rd-lightbox__close svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+        .rd-lightbox__nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(45, 42, 38, 0.6);
+            border: 1px solid rgba(243, 241, 236, 0.2);
+            color: #f3f1ec;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+            z-index: 5;
+        }
+        .rd-lightbox__nav:hover {
+            background: #4f5c4e;
+            border-color: #95c9b9;
+        }
+        .rd-lightbox__nav--prev { left: -4rem; }
+        .rd-lightbox__nav--next { right: -4rem; }
+        .rd-lightbox__nav svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+        @media (max-width: 768px) {
+            .rd-lightbox__nav--prev { left: 0.5rem; }
+            .rd-lightbox__nav--next { right: 0.5rem; }
+            .rd-lightbox__close { top: -2.5rem; }
+        }
+
+        /* Sticky mobile booking bar */
+        .rd-mobile-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 55;
+            background: #2d2a26;
+            color: #f3f1ec;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 -8px 24px rgba(45, 42, 38, 0.2);
+        }
+        .rd-mobile-bar.is-visible {
+            transform: translateY(0);
+        }
+        @media (min-width: 1024px) {
+            .rd-mobile-bar {
+                display: none;
+            }
+        }
+        .rd-mobile-bar__price {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .rd-mobile-bar__amount {
+            font-family: 'Marcellus', serif;
+            font-size: 1.25rem;
+            letter-spacing: -0.01em;
+        }
+        .rd-mobile-bar__unit {
+            font-size: 9px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(243, 241, 236, 0.55);
+        }
+        .rd-mobile-bar__cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.85rem 1.5rem;
+            background: #f3f1ec;
+            color: #2d2a26;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.4s;
+        }
+        .rd-mobile-bar__cta:hover {
+            background: #95c9b9;
+        }
+        .rd-mobile-bar__cta svg {
+            width: 13px;
+            height: 13px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Badge */
+        .rd-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 1rem;
+            background: rgba(149, 201, 185, 0.15);
+            border: 1px solid rgba(149, 201, 185, 0.4);
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: #95c9b9;
+            margin-bottom: 1.5rem;
+        }
+        .rd-badge__dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #95c9b9;
+            animation: polBadgePulse 2.4s ease-in-out infinite;
+        }
+        @keyframes polBadgePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+
+        /* Eyebrow */
+        .rd-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+        .rd-eyebrow::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        /* Editorial number */
+        .rd-editorial-number {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(6rem, 16vw, 14rem);
+            line-height: 0.82;
+            letter-spacing: -0.05em;
+            color: rgba(79, 92, 78, 0.1);
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="font-sans font-light bg-mist">
+
+    <div id="loader" class="fixed inset-0 z-[100] bg-charcoal flex items-center justify-center text-mist flex-col pointer-events-none">
+        <img id="loader-logo"
+             src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white2.png"
+             alt="Singgah Sana"
+             class="h-28 md:h-48 lg:h-56 w-auto opacity-0 transform scale-110">
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-40 bg-transparent px-6 md:px-12 pt-6 pb-4 transition-transform duration-500 nav-visible">
+        <div class="flex justify-between items-center text-xs md:text-sm tracking-wide text-mist drop-shadow-md">
+            <div class="hidden md:block w-1/3 text-left uppercase tracking-widest text-[10px] md:text-xs font-medium opacity-90">
+                Traditional Malay private estate
+            </div>
+            <div class="w-1/2 md:w-1/3 text-left md:text-center font-serif text-xl md:text-2xl font-bold uppercase tracking-widest">
+                <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white.png" alt="Singgah Sana" class="h-8 md:h-20 w-auto inline-block" />
+            </div>
+            <div class="w-1/2 md:w-1/3 text-right flex justify-end">
+                <button id="menuBtn" class="flex items-center gap-2 hover:text-moss transition-colors duration-300 uppercase tracking-widest text-xs font-medium">
+                    <span>Menu</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="fixed inset-0 bg-charcoal text-mist z-50 flex flex-col justify-center items-center clip-menu-hidden transition-all duration-700">
+        <button id="closeBtn" class="absolute top-8 right-6 md:right-12 text-xs uppercase tracking-widest hover:text-seafoam transition-colors flex items-center gap-2">
+            <span>Close</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex flex-col space-y-5 md:space-y-7 text-center font-serif text-3xl md:text-5xl">
+            <a href="index.html" class="menu-link hover:text-seafoam transition-colors duration-300">Home</a>
+            <a href="private-estate.html" class="menu-link hover:text-seafoam transition-colors duration-300">Private Estate</a>
+            <a href="experience.html" class="menu-link hover:text-seafoam transition-colors duration-300">Experience</a>
+            <a href="events.html" class="menu-link hover:text-seafoam transition-colors duration-300">Events</a>
+            <a href="gallery.html" class="menu-link hover:text-seafoam transition-colors duration-300">Gallery</a>
+            <a href="faq.html" class="menu-link hover:text-seafoam transition-colors duration-300">FAQ</a>
+            <a href="contact.html" class="menu-link hover:text-seafoam transition-colors duration-300">Contact</a>
+        </div>
+    </div>
+
+    <main id="smooth-wrapper" class="bg-mist">
+        <div id="smooth-content">
+            
+            <!-- ============================================================
+                 HERO — ROOM DETAILS (split image/panel)
+                 ============================================================ -->
+            <section id="room-hero" class="relative w-full bg-charcoal overflow-hidden">
+                <div class="rd-hero-split">
+
+                    <!-- Media (left) -->
+                    <div class="rd-hero-media">
+                        <img id="heroMainImage" src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="Rumah Ibu" />
+                        <div class="absolute top-24 md:top-32 left-6 md:left-12 z-10 reveal-fade">
+                            <div class="rd-breadcrumb">
+                                <a href="index.html">Home</a>
+                                <span class="rd-breadcrumb__sep">/</span>
+                                <a href="private-estate.html">The Estate</a>
+                                <span class="rd-breadcrumb__sep">/</span>
+                                <span class="text-mist">Lorem</span>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8 z-10">
+                            <span class="text-[9.5px] tracking-[0.28em] uppercase text-mist/70">
+                                Main House · Pavilion 01
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Panel (right) -->
+                    <div class="rd-hero-panel">
+                        <div class="absolute inset-0 texture-overlay opacity-20 pointer-events-none"></div>
+
+                        <div class="relative z-10">
+
+                            <h1 class="rd-title reveal-fade">Room Det 1</h1>
+                            <p class="rd-subtitle reveal-fade">Lorem.</p>
+
+                            <!-- Quick specs -->
+                            <div class="rd-quick-specs reveal-fade">
+                                <div class="rd-quick-spec">
+                                    <span class="rd-quick-spec__label">Bedrooms</span>
+                                    <span class="rd-quick-spec__value">0</span>
+                                </div>
+                                <div class="rd-quick-spec">
+                                    <span class="rd-quick-spec__label">Bathrooms</span>
+                                    <span class="rd-quick-spec__value">0</span>
+                                </div>
+                                <div class="rd-quick-spec">
+                                    <span class="rd-quick-spec__label">Area</span>
+                                    <span class="rd-quick-spec__value">0<span style="font-size:0.6em; opacity:0.6;"> m²</span></span>
+                                </div>
+                                <div class="rd-quick-spec">
+                                    <span class="rd-quick-spec__label">Guests</span>
+                                    <span class="rd-quick-spec__value">0</span>
+                                </div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="rd-price reveal-fade">
+                                <span class="rd-price__amount">RM 0,000</span>
+                                <span class="rd-price__unit">/ night</span>
+                            </div>
+
+                            <!-- CTAs -->
+                            <div class="rd-cta-group reveal-fade">
+                                <a href="contact.html" class="rd-cta rd-cta--primary">
+                                    Reserve Dates
+                                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </a>
+                                <a href="contact.html" class="rd-cta rd-cta--secondary">
+                                    Ask a Question
+                                </a>
+                            </div>
+
+                            <!-- Thumbnail strip -->
+                            <div class="rd-thumbs reveal-fade">
+                                <button class="rd-thumb is-active" data-img="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" aria-label="Image 1">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="" />
+                                </button>
+                                <button class="rd-thumb" data-img="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_1621.jpg" aria-label="Image 2">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_1621.jpg" alt="" />
+                                </button>
+                                <button class="rd-thumb" data-img="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0751.jpg" aria-label="Image 3">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0751.jpg" alt="" />
+                                </button>
+                                <button class="rd-thumb" data-img="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_1606.jpg" aria-label="Image 4">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_1606.jpg" alt="" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CONTENT LAYOUT — main + sticky booking
+                 ============================================================ -->
+            <section id="room-content" class="py-20 md:py-28 px-6 md:px-12 bg-mist relative">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="rd-layout">
+
+                        <!-- MAIN -->
+                        <div>
+
+                            <!-- Introduction -->
+                            <div class="rd-section">
+                                <span class="rd-section__label reveal-fade">Lorem</span>
+                                <h2 class="rd-section__title split-text reveal-fade">Lorem</h2>
+                                <div class="rd-section__body">
+                                    <p class="reveal-fade">
+                                        Lorem
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Tabs: Amenities / Details / House Rules -->
+                            <div class="rd-section">
+                                <span class="rd-section__label reveal-fade">Lorem</span>
+                                <h2 class="rd-section__title split-text reveal-fade">Lorem</h2>
+
+                                <div class="rd-tabs reveal-fade" role="tablist">
+                                    <button class="rd-tab is-active" data-tab="amenities" role="tab">Amenities</button>
+                                    <button class="rd-tab" data-tab="details" role="tab">Details</button>
+                                    <button class="rd-tab" data-tab="rules" role="tab">House Notes</button>
+                                </div>
+
+                                <!-- Panel: Amenities -->
+                                <div class="rd-tab-panel is-active" data-panel="amenities">
+                                    <div class="rd-amenities">
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18M5 6h14a2 2 0 012 2v10M5 6a2 2 0 00-2 2v10M7 18v2M17 18v2"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Organic cotton bedding</div>
+                                                <p class="rd-amenity__desc">Washed soft and changed every third day.</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 20V10l8-6 8 6v10M9 20v-6h6v6"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Lorem</div>
+                                                <p class="rd-amenity__desc">Lorem</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><rect x="6" y="10" width="12" height="10" rx="1"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 10V6a3 3 0 016 0v4"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Safe for valuables</div>
+                                                <p class="rd-amenity__desc">Lorem.</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 4h12v16l-6-4-6 4z"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Lorem</div>
+                                                <p class="rd-amenity__desc">Lorem.</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 4c0 4 3 6 3 9a5 5 0 01-10 0c0-3 3-5 3-9"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Lorem</div>
+                                                <p class="rd-amenity__desc">Lorem</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16c3-3 6-3 9 0s6 3 9 0M3 20c3-3 6-3 9 0s6 3 9 0M12 4v8M9 8l3 4 3-4"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Mosquito nets</div>
+                                                <p class="rd-amenity__desc">Lorem</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 8h16v20H8zM12 4h8v4M12 14h8M12 20h5"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Lorem</div>
+                                                <p class="rd-amenity__desc">Lorem</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 2"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Lorem</div>
+                                                <p class="rd-amenity__desc">Lorem.</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="1"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 10h16"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Lorem</div>
+                                                <p class="rd-amenity__desc">Lorem</p>
+                                            </div>
+                                        </div>
+                                        <div class="rd-amenity reveal-fade">
+                                            <div class="rd-amenity__icon">
+                                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12c3-3 6-3 9 0s6 3 9 0"/></svg>
+                                            </div>
+                                            <div>
+                                                <div class="rd-amenity__title">Lorem</div>
+                                                <p class="rd-amenity__desc">Lorem</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Panel: Details -->
+                                <div class="rd-tab-panel" data-panel="details">
+                                    <div class="rd-plan">
+                                        <div class="rd-plan__media img-reveal-container">
+                                            <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="Floor plan" loading="lazy" />
+                                        </div>
+                                        <div class="rd-plan__stats">
+                                            <div class="rd-plan__stat">
+                                                <span class="rd-plan__stat-label">Lorem</span>
+                                                <span class="rd-plan__stat-value">Lorem · Lorem</span>
+                                            </div>
+                                            <div class="rd-plan__stat">
+                                                <span class="rd-plan__stat-label">Lorem</span>
+                                                <span class="rd-plan__stat-value">Lorem</span>
+                                            </div>
+                                            <div class="rd-plan__stat">
+                                                <span class="rd-plan__stat-label">Lorem</span>
+                                                <span class="rd-plan__stat-value">Lorem</span>
+                                            </div>
+                                            <div class="rd-plan__stat">
+                                                <span class="rd-plan__stat-label">Lorem</span>
+                                                <span class="rd-plan__stat-value">Lorem</span>
+                                            </div>
+                                            <div class="rd-plan__stat">
+                                                <span class="rd-plan__stat-label">Lorem</span>
+                                                <span class="rd-plan__stat-value">Lorem</span>
+                                            </div>
+                                            <div class="rd-plan__stat">
+                                                <span class="rd-plan__stat-label">Lorem</span>
+                                                <span class="rd-plan__stat-value">Lorem</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Panel: House Notes -->
+                                <div class="rd-tab-panel" data-panel="rules">
+                                    <div class="rd-section__body">
+                                        <p class="reveal-fade">
+                                            Lorem
+                                        </p>
+
+                                        <ul class="pol-clauses" style="margin-top: 2rem;">
+                                            <li class="pol-clause reveal-fade">
+                                                <span class="pol-clause__mark">1</span>
+                                                <p class="pol-clause__text" style="font-weight: 300; font-size: 0.95rem; line-height: 1.7; color: rgba(45,42,38,0.68);">
+                                                    Lorem
+                                                </p>
+                                            </li>
+                                            <li class="pol-clause reveal-fade">
+                                                <span class="pol-clause__mark">2</span>
+                                                <p class="pol-clause__text" style="font-weight: 300; font-size: 0.95rem; line-height: 1.7; color: rgba(45,42,38,0.68);">
+                                                    Lorem
+                                                </p>
+                                            </li>
+                                            <li class="pol-clause reveal-fade">
+                                                <span class="pol-clause__mark">3</span>
+                                                <p class="pol-clause__text" style="font-weight: 300; font-size: 0.95rem; line-height: 1.7; color: rgba(45,42,38,0.68);">
+                                                    Lorem
+                                                </p>
+                                            </li>
+                                            <li class="pol-clause reveal-fade">
+                                                <span class="pol-clause__mark">4</span>
+                                                <p class="pol-clause__text" style="font-weight: 300; font-size: 0.95rem; line-height: 1.7; color: rgba(45,42,38,0.68);">
+                                                    Lorem
+                                                </p>
+                                            </li>
+                                            <li class="pol-clause reveal-fade">
+                                                <span class="pol-clause__mark">5</span>
+                                                <p class="pol-clause__text" style="font-weight: 300; font-size: 0.95rem; line-height: 1.7; color: rgba(45,42,38,0.68);">
+                                                    Lorem
+                                                </p>
+                                            </li>
+                                        </ul>
+
+                                        <p class="reveal-fade" style="margin-top: 2rem;">
+                                            For our full guest policy, please see the <a href="policy.html" style="color: #4f5c4e; border-bottom: 1px solid rgba(79,92,78,0.4); padding-bottom: 2px;">House Policy</a>.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Related pavilions -->
+                            <div class="rd-section">
+                                <span class="rd-section__label reveal-fade">Lorem</span>
+                                <h2 class="rd-section__title split-text reveal-fade">Lorem</h2>
+
+                                <div class="rd-related">
+                                    <a href="room-details.html" class="rd-related-card reveal-fade">
+                                        <div class="rd-related-card__media">
+                                            <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="Rumah Bunga" loading="lazy" />
+                                        </div>
+                                        <div class="rd-related-card__name">Lorem</div>
+                                        <div class="rd-related-card__meta">0 BR · 0 Guests · From RM 0,000</div>
+                                    </a>
+                                    <a href="room-details.html" class="rd-related-card reveal-fade">
+                                        <div class="rd-related-card__media">
+                                            <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="Rumah Rimba" loading="lazy" />
+                                        </div>
+                                        <div class="rd-related-card__name">Lorem</div>
+                                        <div class="rd-related-card__meta">0 BR · 0 Guests · From RM 0,000</div>
+                                    </a>
+                                    <a href="room-details.html" class="rd-related-card reveal-fade">
+                                        <div class="rd-related-card__media">
+                                            <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="Dining Pavilion" loading="lazy" />
+                                        </div>
+                                        <div class="rd-related-card__name">Lorem</div>
+                                        <div class="rd-related-card__meta">0 BR · 0 Guests · From RM 0,000</div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- STICKY BOOKING PANEL -->
+                        <aside class="rd-booking-panel reveal-fade">
+                            <div class="rd-booking-card">
+                                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                                <div class="relative z-10">
+                                    <span class="rd-booking-card__label">Reserve</span>
+                                    <h3 class="rd-booking-card__title">Check availability</h3>
+                                    <p class="rd-booking-card__sub">Enquire directly and we'll reply within 24 hours with rates and available dates.</p>
+
+                                    <form id="roomBookingForm">
+                                        <div class="rd-booking-field">
+                                            <label for="rdArrival">Arrival</label>
+                                            <input type="date" id="rdArrival" name="arrival" />
+                                        </div>
+                                        <div class="rd-booking-field">
+                                            <label for="rdDeparture">Departure</label>
+                                            <input type="date" id="rdDeparture" name="departure" />
+                                        </div>
+                                        <div class="rd-booking-field">
+                                            <label for="rdGuests">Guests</label>
+                                            <select id="rdGuests" name="guests">
+                                                <option value="1">1 guest</option>
+                                                <option value="2" selected>2 guests</option>
+                                                <option value="3">3 guests</option>
+                                                <option value="4">4 guests</option>
+                                                <option value="5">5 guests</option>
+                                                <option value="6">6 guests</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="rd-booking-submit">
+                                            Send Enquiry
+                                            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                        </button>
+                                    </form>
+                                    <p class="rd-booking-note">
+                                        No prepayment required at this stage. We'll confirm availability first.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Editorial number block -->
+                            <div style="padding-top: 2.5rem; text-align: center;">
+                                <div class="rd-editorial-number hidden lg:block" style="color: rgba(79, 92, 78, 0.12);">01</div>
+                            </div>
+                        </aside>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CTA — closing
+                 ============================================================ -->
+            <section id="room-cta" class="py-24 md:py-32 px-6 md:px-12 bg-charcoal text-mist relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-20"></div>
+                <div class="max-w-4xl mx-auto relative z-10 text-center">
+                    <span class="text-[10px] tracking-[0.3em] uppercase text-seafoam font-medium mb-8 block reveal-fade">
+                        Lorem
+                    </span>
+                    <h2 class="split-text font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-10">
+                        Lorem <em class="text-seafoam">Lorem</em>.
+                    </h2>
+                    <p class="text-mist/60 font-light text-base md:text-lg max-w-xl mx-auto mb-12 reveal-fade">
+                        Lorem
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 reveal-fade">
+                        <a href="private-estate.html" class="inline-block bg-mist text-moss px-10 py-4 text-[10px] tracking-[0.28em] uppercase font-medium hover:bg-seafoam hover:text-charcoal transition-all duration-500">
+                            Explore the Estate
+                        </a>
+                        <a href="contact.html" class="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-mist border-b border-mist/40 pb-1 hover:gap-5 hover:border-seafoam hover:text-seafoam transition-all duration-500">
+                            Enquire Now
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+             <footer id="availability" class="bg-moss text-mist pt-24 pb-12 px-6 md:px-12 relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div id="enquire" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-24 border-b border-mist/20 pb-24">
+                        <div>
+                            <span class="text-[10px] tracking-[0.2em] uppercase text-seafoam mb-8 block reveal-fade">Enquire</span>
+                            <h2 class="font-serif text-5xl md:text-6xl mb-8 leading-[1.1] text-mist tracking-tight split-text">
+                                Begin your <em class="text-seafoam">stay</em>.
+                            </h2>
+                            <p class="text-mist/70 font-light text-base md:text-lg max-w-md mb-10 reveal-fade">
+                                The entire estate can be yours. Enquire about availability, rates, and bespoke experiences.
+                            </p>
+                            <a href="contact.html" class="reveal-fade inline-block border border-mist px-8 py-4 text-xs tracking-[0.2em] uppercase hover:bg-mist hover:text-moss transition-all duration-300">
+                                Contact Us
+                            </a>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 lg:justify-end mt-8 lg:mt-16">
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Discover</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="about.html" class="footer-link">About</a></li>
+                                    <li><a href="blog.html" class="footer-link">Journal</a></li>
+                                    <li><a href="faq.html" class="footer-link">FAQ</a></li>
+                                    <li><a href="policy.html" class="footer-link">Policy</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Contact</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="#" class="footer-link">hello@singgah-sana.com</a></li>
+                                    <li><a href="#" class="footer-link">+60 00000000</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Location</h4>
+                                <address class="not-italic font-light text-mist/80 text-base leading-relaxed">
+                                    No.3 Lorong Cheringin<br>
+                                    Kampung Janda Baik<br>
+                                    28750 Bentong, Pahang<br>
+                                    Malaysia
+                                </address>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-center text-[10px] text-mist/50 uppercase tracking-[0.2em] font-medium reveal-fade">
+                        <p class="mb-4 md:mb-0">&copy; 2026 Singgah Sana. All rights reserved.</p>
+                        <div class="flex flex-wrap gap-6 justify-center">
+                            <a href="#" class="hover:text-mist transition-colors">Instagram</a>
+                            <a href="#" class="hover:text-mist transition-colors">Facebook</a>
+                            <a href="#" class="hover:text-mist transition-colors">TripAdvisor</a>
+                            <a href="#" class="hover:text-mist transition-colors">TikTok</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- STICKY MOBILE BOOKING BAR -->
+    <div class="rd-mobile-bar" id="rdMobileBar">
+        <div class="rd-mobile-bar__price">
+            <span class="rd-mobile-bar__amount">RM 1,800</span>
+            <span class="rd-mobile-bar__unit">per night</span>
+        </div>
+        <a href="contact.html" class="rd-mobile-bar__cta">
+            Reserve
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="rdLightbox" class="rd-lightbox" aria-hidden="true">
+        <div class="rd-lightbox__inner">
+            <button class="rd-lightbox__close" id="rdLightboxClose" aria-label="Close">
+                <span>Close</span>
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <button class="rd-lightbox__nav rd-lightbox__nav--prev" id="rdLightboxPrev" aria-label="Previous">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button class="rd-lightbox__nav rd-lightbox__nav--next" id="rdLightboxNext" aria-label="Next">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <img id="rdLightboxImg" class="rd-lightbox__img" src="" alt="" />
+        </div>
+    </div>
+
+    <!-- LIVE CHAT -->
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-header">
+            <div>
+                <div class="chat-header-title">Live Chat Singgah Sana</div>
+                <div class="chat-header-status">Online · Replies within minutes</div>
+            </div>
+            <button id="chatClose" class="chat-close" aria-label="Close chat">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="chatBody" class="chat-body"></div>
+
+        <div class="chat-input-wrap">
+            <div class="chat-input-row">
+                <textarea id="chatInput" class="chat-input" rows="1" placeholder="Write a message..."></textarea>
+                <button id="chatSend" class="chat-send" aria-label="Send">
+                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            Lorem ipsum
+        </div>
+    </div>
+
+    <button id="chatButton" class="chat-button" aria-label="Open chat">
+        <svg viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+        </svg>
+        <span>Live Chat</span>
+    </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            gsap.config({ force3D: true });
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+            gsap.ticker.lagSmoothing(0); 
+
+            document.body.style.overflow = "hidden";
+
+            // Loader
+            const tlLoader = gsap.timeline({
+                onComplete: () => {
+                    document.body.style.overflow = ""; 
+                }
+            });
+
+            tlLoader
+                .to("#loader-logo", { opacity: 1, scale: 1.5, duration: 2, ease: "power3.out" })
+                .to("#loader-logo", { opacity: 0, y: -30, duration: 1, ease: "power2.inOut" }, "+=0.5")
+                .to("#loader", { yPercent: -100, duration: 1, ease: "power3.inOut" });
+
+            // Navbar
+            let lastScroll = 0;
+            const navbar = document.getElementById('navbar');
+            
+            lenis.on('scroll', (e) => {
+                const currentScroll = e.animatedScroll;
+                if (!document.getElementById('menuOverlay').classList.contains('clip-menu-visible')) {
+                    if (currentScroll > 50) {
+                        navbar.classList.replace('bg-transparent', 'bg-charcoal');
+                        if (currentScroll > lastScroll) {
+                            navbar.classList.remove('nav-visible');
+                            navbar.classList.add('nav-hidden');
+                        } else {
+                            navbar.classList.remove('nav-hidden');
+                            navbar.classList.add('nav-visible');
+                        }
+                    } else {
+                        navbar.classList.replace('bg-charcoal', 'bg-transparent');
+                        navbar.classList.remove('nav-hidden');
+                        navbar.classList.add('nav-visible');
+                    }
+                }
+                lastScroll = currentScroll;
+            });
+
+            // Menu
+            const menuBtn = document.getElementById('menuBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            function toggleMenu() {
+                menuOverlay.classList.toggle('clip-menu-visible');
+                menuOverlay.classList.toggle('clip-menu-hidden');
+                
+                if(menuOverlay.classList.contains('clip-menu-visible')) {
+                    lenis.stop();
+                } else {
+                    lenis.start();
+                }
+            }
+
+            menuBtn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuOverlay.classList.remove('clip-menu-visible');
+                    menuOverlay.classList.add('clip-menu-hidden');
+                    lenis.start();
+                });
+            });
+
+            // Typography Reveals
+            const splitHeadings = new SplitType('.split-text', { types: 'lines' });
+            
+            const wrapLines = (splitInstance) => {
+                splitInstance.lines.forEach(line => {
+                    if (!line.parentElement.classList.contains('line-wrapper')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('line-wrapper');
+                        line.parentNode.insertBefore(wrapper, line);
+                        wrapper.appendChild(line);
+                        gsap.set(line, { yPercent: 120, rotationZ: 2, opacity: 0 });
+                    }
+                });
+            };
+
+            wrapLines(splitHeadings);
+
+            ScrollTrigger.batch(splitHeadings.elements, {
+                start: "top 85%",
+                onEnter: batch => {
+                    batch.forEach(el => {
+                        gsap.to(el.querySelectorAll('.line'), {
+                            yPercent: 0, rotationZ: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: "power3.out"
+                        });
+                    });
+                }
+            });
+
+            // Image Reveal
+            const revealContainers = document.querySelectorAll('.img-reveal-container');
+            revealContainers.forEach(container => {
+                const img = container.querySelector('img');
+                if (!img) return;
+                
+                gsap.set(img, { scale: 1.25 });
+                gsap.set(container, { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" });
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top 85%",
+                    }
+                });
+
+                tl.to(container, {
+                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+                    duration: 1.5,
+                    ease: "power3.inOut"
+                })
+                .to(img, {
+                    scale: 1,
+                    duration: 1.8,
+                    ease: "power2.out"
+                }, "-=1.2"); 
+            });
+
+            // Fade in
+            ScrollTrigger.batch('.reveal-fade', {
+                start: "top 92%",
+                onEnter: batch => {
+                    gsap.fromTo(batch, 
+                        { y: 24, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: "power2.out", overwrite: true }
+                    );
+                }
+            });
+
+            // ============================================================
+            // HERO THUMBNAILS
+            // ============================================================
+            const heroMainImage = document.getElementById('heroMainImage');
+            const thumbBtns = document.querySelectorAll('.rd-thumb');
+
+            thumbBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const imgSrc = btn.getAttribute('data-img');
+                    if (!imgSrc || !heroMainImage) return;
+
+                    // Update active state
+                    thumbBtns.forEach(b => b.classList.remove('is-active'));
+                    btn.classList.add('is-active');
+
+                    // Fade transition
+                    gsap.to(heroMainImage, {
+                        opacity: 0,
+                        duration: 0.35,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            heroMainImage.src = imgSrc;
+                            gsap.to(heroMainImage, { opacity: 1, duration: 0.55, ease: "power2.in" });
+                        }
+                    });
+                });
+            });
+
+            // ============================================================
+            // TABS
+            // ============================================================
+            const rdTabs = document.querySelectorAll('.rd-tab');
+            const rdPanels = document.querySelectorAll('.rd-tab-panel');
+
+            rdTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-tab');
+
+                    rdTabs.forEach(t => t.classList.remove('is-active'));
+                    tab.classList.add('is-active');
+
+                    rdPanels.forEach(p => {
+                        p.classList.toggle('is-active', p.getAttribute('data-panel') === target);
+                    });
+
+                    ScrollTrigger.refresh();
+                });
+            });
+
+            // ============================================================
+            // STICKY MOBILE BAR — show after hero scrolled
+            // ============================================================
+            const rdMobileBar = document.getElementById('rdMobileBar');
+            const roomHero = document.getElementById('room-hero');
+
+            if (rdMobileBar && roomHero) {
+                const heroObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        // When hero is out of view (scrolled past), show the bar
+                        if (!entry.isIntersecting) {
+                            rdMobileBar.classList.add('is-visible');
+                        } else {
+                            rdMobileBar.classList.remove('is-visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                heroObserver.observe(roomHero);
+            }
+
+            // ============================================================
+            // BOOKING FORM (fake)
+            // ============================================================
+            const roomBookingForm = document.getElementById('roomBookingForm');
+            if (roomBookingForm) {
+                roomBookingForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const submitBtn = roomBookingForm.querySelector('.rd-booking-submit');
+                    const originalHTML = submitBtn.innerHTML;
+
+                    submitBtn.innerHTML = 'Thank you — we\'ll be in touch';
+                    submitBtn.style.background = '#95c9b9';
+                    submitBtn.style.color = '#2d2a26';
+
+                    setTimeout(() => {
+                        roomBookingForm.reset();
+                        submitBtn.innerHTML = originalHTML;
+                        submitBtn.style.background = '';
+                        submitBtn.style.color = '';
+                    }, 2800);
+                });
+            }
+
+            // ============================================================
+            // LIGHTBOX — hero image enlarge
+            // ============================================================
+            const rdLightbox = document.getElementById('rdLightbox');
+            const rdLightboxImg = document.getElementById('rdLightboxImg');
+            const rdLightboxClose = document.getElementById('rdLightboxClose');
+            const rdLightboxPrev = document.getElementById('rdLightboxPrev');
+            const rdLightboxNext = document.getElementById('rdLightboxNext');
+
+            const galleryImages = Array.from(thumbBtns).map(btn => btn.getAttribute('data-img')).filter(Boolean);
+            let currentLightboxIndex = 0;
+
+            function openLightbox(index = 0) {
+                currentLightboxIndex = (index + galleryImages.length) % galleryImages.length;
+                rdLightboxImg.src = galleryImages[currentLightboxIndex];
+                rdLightbox.classList.add('is-open');
+                rdLightbox.setAttribute('aria-hidden', 'false');
+                lenis.stop();
+            }
+
+            function closeLightbox() {
+                rdLightbox.classList.remove('is-open');
+                rdLightbox.setAttribute('aria-hidden', 'true');
+                lenis.start();
+            }
+
+            function nextLightbox() {
+                openLightbox(currentLightboxIndex + 1);
+            }
+
+            function prevLightbox() {
+                openLightbox(currentLightboxIndex - 1);
+            }
+
+            // Click hero image to open lightbox
+            if (heroMainImage) {
+                heroMainImage.style.cursor = 'zoom-in';
+                heroMainImage.addEventListener('click', () => {
+                    const currentSrc = heroMainImage.getAttribute('src');
+                    const idx = galleryImages.indexOf(currentSrc);
+                    openLightbox(idx >= 0 ? idx : 0);
+                });
+            }
+
+            rdLightboxClose.addEventListener('click', closeLightbox);
+            rdLightboxNext.addEventListener('click', nextLightbox);
+            rdLightboxPrev.addEventListener('click', prevLightbox);
+
+            rdLightbox.addEventListener('click', (e) => {
+                if (e.target === rdLightbox) closeLightbox();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (!rdLightbox.classList.contains('is-open')) return;
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowRight') nextLightbox();
+                if (e.key === 'ArrowLeft') prevLightbox();
+            });
+
+            // Resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    splitHeadings.revert();
+                    splitHeadings.split();
+                    wrapLines(splitHeadings);
+                    ScrollTrigger.refresh();
+                }, 200);
+            });
+
+            // ============================================================
+            // LIVE CHAT — Concierge
+            // ============================================================
+            const chatPanel = document.getElementById('chatPanel');
+            const chatButton = document.getElementById('chatButton');
+            const chatClose = document.getElementById('chatClose');
+            const chatBody = document.getElementById('chatBody');
+            const chatInput = document.getElementById('chatInput');
+            const chatSend = document.getElementById('chatSend');
+
+            let chatOpen = false;
+            let isTyping = false;
+            const CHAT_STORAGE_KEY = 'singgahChatHistory_v1';
+
+            let chatHistory = [];
+            try {
+                chatHistory = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+            } catch (e) {
+                chatHistory = [];
+            }
+
+            function getTimeString() {
+                const now = new Date();
+                return now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const initialBotMessages = [
+                {
+                    type: 'bot',
+                    text: 'Welcome to Singgah Sana. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    time: getTimeString()
+                },
+                {
+                    type: 'bot',
+                    text: 'How may I assist you today?',
+                    time: getTimeString(),
+                    quickReplies: ['Lorem', 'Lorem', 'Lorem', 'Lorem']
+                }
+            ];
+
+            function getBotReply(userText) {
+                const lower = userText.toLowerCase().trim();
+
+                if (/^(hi|hello|hey|good morning|good afternoon|good evening|greetings|selamat|hai)/.test(lower)) {
+                    return {
+                        text: 'Hello, lorem ipsum dolor sit amet consectetur adipiscing elit sed do?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(book|reserve|reservation|stay|room|pavilion|accommodation|available|availability|check.?in|check.?out)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(rate|price|cost|how much|pricing|fee|expensive|cheap|budget)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Cancellation policy']
+                    };
+                }
+
+                if (/(cancel|cancellation|refund|policy|deposit|penalty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See full policy', 'Ask another question']
+                    };
+                }
+
+                if (/(where|location|address|directions|how to get|far|distance|near|map|janda baik|bentong|pahang|kl|kuala lumpur)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Open in Maps', 'Airport transfer', 'Ask another question']
+                    };
+                }
+
+                if (/(activit|experience|things to do|do there|what can i do|yoga|fishing|hike|hiking|picnic|walk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See experiences', 'Book a stay']
+                    };
+                }
+
+                if (/(event|wedding|marriage|engagement|private dinner|meeting|conference|workshop|corporate|celebrat)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See events', 'Send an enquiry']
+                    };
+                }
+
+                if (/(child|children|kid|family|baby|infant|toddler)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(pet|dog|cat|animal)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(amenit|facilit|provide|include|wifi|wi-fi|air.?con|ac|towel|robe|toiletr|bedding|net|safe|incense|desk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(food|dining|dinner|lunch|breakfast|chef|meal|eat|menu|vegetarian|vegan|halal|allerg)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Book a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(accessib|wheelchair|mobility|disabled|elderly|walking difficulty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(airport|transfer|pickup|pick up|taxi|grab|transport|driver)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(wi.?fi|internet|connection|online)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Ask another question']
+                    };
+                }
+
+                if (/(thank|thanks|appreciat|grateful)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Goodbye']
+                    };
+                }
+
+                if (/(bye|goodbye|see you|farewell|that.s all|nothing else)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                    };
+                }
+
+                if (/(see room|see rooms|show rooms|open rooms)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'room-details.html'
+                    };
+                }
+
+                if (/(see experience|show experience|open experience|see experiences)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'experience.html'
+                    };
+                }
+
+                if (/(see event|show event|open event|see events|send.*enquir)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'events.html'
+                    };
+                }
+
+                if (/(see.*polic|open.*polic)/.test(lower)) {
+                    return {
+                        text: 'Opening our policy page for you now.',
+                        redirect: 'policy.html'
+                    };
+                }
+
+                if (/(map|open.*map|direction)/.test(lower)) {
+                    return {
+                        text: 'Opening our location in Maps for you now.',
+                        redirect: 'https://maps.app.goo.gl/U5hAkqrDFPQwzhny7'
+                    };
+                }
+
+                if (/(book a stay|booking a stay|reserve|make.*book)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        redirect: 'contact.html'
+                    };
+                }
+
+                return {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                    quickReplies: ['Booking a stay', 'Things to do', 'Getting here']
+                };
+            }
+
+            function renderChat() {
+                if (chatHistory.length === 0) {
+                    chatHistory = [...initialBotMessages];
+                    saveChat();
+                }
+
+                chatBody.innerHTML = '';
+
+                chatHistory.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = `chat-msg chat-msg--${msg.type}`;
+
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-msg__bubble';
+                    bubble.textContent = msg.text;
+                    div.appendChild(bubble);
+
+                    if (msg.quickReplies && msg.quickReplies.length > 0) {
+                        const quick = document.createElement('div');
+                        quick.className = 'chat-quick';
+                        msg.quickReplies.forEach(reply => {
+                            const btn = document.createElement('button');
+                            btn.textContent = reply;
+                            btn.addEventListener('click', () => handleQuickReply(reply));
+                            quick.appendChild(btn);
+                        });
+                        div.appendChild(quick);
+                    }
+
+                    const time = document.createElement('div');
+                    time.className = 'chat-msg__time';
+                    time.textContent = msg.time || '';
+                    div.appendChild(time);
+
+                    chatBody.appendChild(div);
+                });
+
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function saveChat() {
+                try {
+                    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+                } catch (e) {}
+            }
+
+            function addMessage(msg) {
+                chatHistory.push(msg);
+                saveChat();
+                renderChat();
+            }
+
+            function showTyping() {
+                const typing = document.createElement('div');
+                typing.className = 'chat-typing';
+                typing.id = 'chatTyping';
+                typing.innerHTML = '<span></span><span></span><span></span>';
+                chatBody.appendChild(typing);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+            function hideTyping() {
+                const t = document.getElementById('chatTyping');
+                if (t) t.remove();
+            }
+
+            function handleQuickReply(reply) {
+                addMessage({
+                    type: 'user',
+                    text: reply,
+                    time: getTimeString()
+                });
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(reply);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 500);
+            }
+
+            function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text || isTyping) return;
+
+                addMessage({
+                    type: 'user',
+                    text: text,
+                    time: getTimeString()
+                });
+
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(text);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 600);
+            }
+
+            function openChat() {
+                chatOpen = true;
+                chatPanel.classList.add('is-open');
+                chatButton.classList.add('is-hidden');
+                setTimeout(() => chatInput.focus(), 400);
+            }
+
+            function closeChat() {
+                chatOpen = false;
+                chatPanel.classList.remove('is-open');
+                chatButton.classList.remove('is-hidden');
+            }
+
+            chatButton.addEventListener('click', openChat);
+            chatClose.addEventListener('click', closeChat);
+            chatSend.addEventListener('click', sendMessage);
+
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            chatInput.addEventListener('input', () => {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
+            });
+
+            const hasAutoOpened = sessionStorage.getItem('singgahChatAutoOpened');
+            if (!hasAutoOpened && window.innerWidth > 1024) {
+                setTimeout(() => {
+                    if (!chatOpen) {
+                        openChat();
+                        sessionStorage.setItem('singgahChatAutoOpened', '1');
+                    }
+                }, 12000);
+            }
+
+            renderChat();
+        });
+    </script>
+</body>
+</html>

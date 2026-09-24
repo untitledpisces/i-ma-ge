@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Singgah Sana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mist': '#f3f1ec',
+                        'seafoam': '#95c9b9',
+                        'moss': '#4f5c4e',
+                        'charcoal': '#2d2a26',
+                        'sand': '#e8e2d5',
+                        'clay': '#c9a88a',
+                        'ink': '#1a1815',
+                        'paper': '#faf8f4',
+                    },
+                    fontFamily: {
+                        serif: ['Marcellus', 'serif'],
+                        sans: ['"Work Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f3f1ec;
+            color: #2d2a26;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+        .line-wrapper {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: top;
+            padding-bottom: 0.1em;
+        }
+        
+        .img-reveal-container {
+            overflow: hidden;
+            position: relative;
+            transform: translateZ(0);
+            background-color: rgba(45, 42, 38, 0.1);
+        }
+
+        ::selection { background-color: #4f5c4e; color: #f3f1ec; }
+        
+        .nav-hidden { transform: translate3d(0, -100%, 0); }
+        .nav-visible { transform: translate3d(0, 0, 0); }
+
+        .clip-menu-hidden { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+        .clip-menu-visible { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+        .texture-overlay {
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           FOOTER LINKS
+           ============================================================ */
+        .footer-link {
+            display: inline-block;
+            font-size: 0.95rem;
+            color: rgba(243, 241, 236, 0.75);
+            transition: color 0.4s, padding-left 0.4s;
+            position: relative;
+        }
+        .footer-link:hover {
+            color: #f3f1ec;
+            padding-left: 8px;
+        }
+        .footer-link::before {
+            content: '·';
+            position: absolute;
+            left: -4px;
+            opacity: 0;
+            transition: opacity 0.4s, left 0.4s;
+            color: #95c9b9;
+        }
+        .footer-link:hover::before {
+            opacity: 1;
+            left: -8px;
+        }
+
+        /* ============================================================
+           LIVE CHAT — posisi KIRI bawah
+           ============================================================ */
+        .chat-button {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 60;
+            height: 52px;
+            padding: 0 20px 0 16px;
+            border-radius: 999px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(45, 42, 38, 0.28);
+            transition: background 0.4s, transform 0.4s, box-shadow 0.4s, opacity 0.4s;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+        }
+        .chat-button:hover {
+            background: #2d2a26;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(45, 42, 38, 0.35);
+        }
+        .chat-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 1.75;
+            fill: none;
+        }
+        .chat-button::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 999px;
+            border: 1px solid #95c9b9;
+            opacity: 0;
+            animation: chatPulse 3.4s ease-out infinite;
+            pointer-events: none;
+        }
+        @keyframes chatPulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 0; transform: scale(1.15); }
+        }
+        .chat-button.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 92px;
+            left: 24px;
+            z-index: 61;
+            width: 400px;
+            max-width: calc(100vw - 48px);
+            height: 600px;
+            max-height: calc(100vh - 140px);
+            background: #f3f1ec;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 60px rgba(45, 42, 38, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.98);
+            transform-origin: bottom left;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0.4s,
+                        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .chat-panel.is-open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .chat-header {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 20px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-header-title {
+            font-family: 'Marcellus', serif;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+        }
+        .chat-header-status {
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            font-family: 'Work Sans', sans-serif;
+        }
+        .chat-header-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #95c9b9;
+            animation: chatStatusPulse 2s ease-in-out infinite;
+        }
+        @keyframes chatStatusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: #f3f1ec;
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.75;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .chat-close:hover { opacity: 1; }
+        .chat-close svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #f3f1ec;
+            scroll-behavior: smooth;
+        }
+        .chat-body::-webkit-scrollbar { width: 4px; }
+        .chat-body::-webkit-scrollbar-thumb {
+            background: rgba(79, 92, 78, 0.25);
+            border-radius: 2px;
+        }
+
+        .chat-msg {
+            max-width: 86%;
+            font-size: 13.5px;
+            line-height: 1.55;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        @keyframes msgIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-msg--bot { align-self: flex-start; }
+        .chat-msg--user { align-self: flex-end; }
+        .chat-msg__bubble {
+            padding: 12px 16px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 300;
+            border-radius: 2px;
+        }
+        .chat-msg--bot .chat-msg__bubble {
+            background: #ffffff;
+            color: #2d2a26;
+            border-left: 2px solid #4f5c4e;
+        }
+        .chat-msg--user .chat-msg__bubble {
+            background: #4f5c4e;
+            color: #f3f1ec;
+        }
+        .chat-msg__time {
+            font-size: 9px;
+            color: rgba(45, 42, 38, 0.4);
+            margin-top: 5px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        .chat-msg--user .chat-msg__time { text-align: right; }
+
+        .chat-typing {
+            align-self: flex-start;
+            max-width: 86%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-left: 2px solid #4f5c4e;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            opacity: 0;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .chat-typing span {
+            width: 6px;
+            height: 6px;
+            background: #4f5c4e;
+            border-radius: 50%;
+            opacity: 0.35;
+            animation: typingBounce 1.2s ease-in-out infinite;
+        }
+        .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-quick {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .chat-quick button {
+            background: transparent;
+            border: 1px solid rgba(79, 92, 78, 0.3);
+            color: #4f5c4e;
+            padding: 7px 13px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            border-radius: 2px;
+        }
+        .chat-quick button:hover {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+
+        .chat-input-wrap {
+            border-top: 1px solid rgba(79, 92, 78, 0.15);
+            padding: 14px 18px;
+            background: #f3f1ec;
+            flex-shrink: 0;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13.5px;
+            color: #2d2a26;
+            padding: 8px 0;
+            resize: none;
+            outline: none;
+            max-height: 80px;
+            line-height: 1.5;
+        }
+        .chat-input::placeholder { color: rgba(45, 42, 38, 0.4); }
+        .chat-send {
+            width: 38px;
+            height: 38px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.3s;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+        .chat-send:hover {
+            background: #2d2a26;
+            transform: translateY(-1px);
+        }
+        .chat-send svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        .chat-send:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .chat-footer {
+            text-align: center;
+            padding: 10px 20px 14px;
+            font-size: 9.5px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.5);
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .chat-panel {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                bottom: 0;
+                right: 0;
+                top: 0;
+                left: 0;
+            }
+            .chat-button {
+                bottom: 20px;
+                left: 20px;
+                height: 48px;
+                padding: 0 16px 0 14px;
+                font-size: 10px;
+            }
+            .chat-panel.is-open ~ .chat-button {
+                display: none;
+            }
+        }
+
+        /* ============================================================
+           CONTACT PAGE — UI/UX KHUSUS
+           ============================================================ */
+
+        /* Hero — split dengan vertical line */
+        .con-hero-rule {
+            width: 1px;
+            height: 60px;
+            background: rgba(243, 241, 236, 0.3);
+        }
+
+        /* Split layout — form kiri, info kanan */
+        .con-split {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+        }
+        @media (min-width: 1024px) {
+            .con-split {
+                grid-template-columns: 1.4fr 1fr;
+                gap: 6rem;
+            }
+        }
+
+        /* Contact info sticky */
+        .con-info-sticky {
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .con-info-sticky {
+                position: sticky;
+                top: 120px;
+                align-self: start;
+            }
+        }
+
+        /* Form fields — minimal, editorial */
+        .con-field {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .con-field__label {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(45, 42, 38, 0.55);
+            margin-bottom: 0.75rem;
+            transition: color 0.4s;
+        }
+        .con-field__input,
+        .con-field__textarea,
+        .con-field__select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(45, 42, 38, 0.2);
+            padding: 0.5rem 0 1rem;
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+            color: #2d2a26;
+            letter-spacing: -0.005em;
+            outline: none;
+            transition: border-color 0.4s;
+            border-radius: 0;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .con-field__input::placeholder,
+        .con-field__textarea::placeholder {
+            color: rgba(45, 42, 38, 0.25);
+            font-style: italic;
+            font-family: 'Marcellus', serif;
+        }
+        .con-field__input:focus,
+        .con-field__textarea:focus,
+        .con-field__select:focus {
+            border-bottom-color: #4f5c4e;
+        }
+        .con-field__input:focus + .con-field__label,
+        .con-field__textarea:focus + .con-field__label {
+            color: #4f5c4e;
+        }
+        .con-field__textarea {
+            resize: none;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+        .con-field__select {
+            cursor: pointer;
+            padding-right: 2rem;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234f5c4e' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+        }
+        .con-field__select option {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            color: #2d2a26;
+        }
+
+        /* Radio chips — enquiry type */
+        .con-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .con-chip {
+            position: relative;
+        }
+        .con-chip input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .con-chip__label {
+            display: inline-block;
+            padding: 0.65rem 1.1rem;
+            font-size: 10.5px;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: rgba(45, 42, 38, 0.6);
+            border: 1px solid rgba(45, 42, 38, 0.2);
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+            user-select: none;
+        }
+        .con-chip__label:hover {
+            border-color: #4f5c4e;
+            color: #4f5c4e;
+        }
+        .con-chip input:checked + .con-chip__label {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+
+        /* Submit */
+        .con-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 1.25rem 2.5rem;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background 0.4s, gap 0.4s;
+            margin-top: 1rem;
+        }
+        .con-submit:hover {
+            background: #2d2a26;
+            gap: 1.5rem;
+        }
+        .con-submit svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Info card */
+        .con-card {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .con-card--light {
+            background: transparent;
+            border: 1px solid rgba(45, 42, 38, 0.12);
+            color: #2d2a26;
+            padding: 2rem 1.75rem;
+        }
+        .con-card__label {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            margin-bottom: 1.25rem;
+            display: block;
+        }
+        .con-card--light .con-card__label {
+            color: rgba(79, 92, 78, 0.6);
+        }
+        .con-card__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+            margin-bottom: 1rem;
+        }
+        .con-card__desc {
+            font-weight: 300;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: rgba(243, 241, 236, 0.7);
+            margin-bottom: 1.5rem;
+        }
+        .con-card--light .con-card__desc {
+            color: rgba(45, 42, 38, 0.65);
+        }
+
+        /* Contact list rows */
+        .con-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(243, 241, 236, 0.15);
+            text-decoration: none;
+            color: inherit;
+            transition: padding-left 0.4s;
+        }
+        .con-row:last-child { border-bottom: none; }
+        .con-row:hover { padding-left: 0.5rem; }
+        .con-card--light .con-row {
+            border-bottom-color: rgba(45, 42, 38, 0.1);
+        }
+        .con-row__icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+        }
+        .con-row__icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #95c9b9;
+            stroke-width: 1.5;
+            fill: none;
+        }
+        .con-card--light .con-row__icon svg {
+            stroke: #4f5c4e;
+        }
+        .con-row__content {
+            flex: 1;
+        }
+        .con-row__title {
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(243, 241, 236, 0.5);
+            margin-bottom: 6px;
+        }
+        .con-card--light .con-row__title {
+            color: rgba(45, 42, 38, 0.5);
+        }
+        .con-row__value {
+            font-family: 'Marcellus', serif;
+            font-size: 1.05rem;
+            line-height: 1.3;
+            letter-spacing: -0.005em;
+        }
+        .con-card--light .con-row__value {
+            color: #2d2a26;
+        }
+
+        /* Hours list */
+        .con-hours {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+        .con-hours__row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(45, 42, 38, 0.1);
+        }
+        .con-hours__row:last-child { border-bottom: none; }
+        .con-hours__day {
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(45, 42, 38, 0.55);
+        }
+        .con-hours__time {
+            font-family: 'Marcellus', serif;
+            font-size: 0.95rem;
+            color: #2d2a26;
+            letter-spacing: -0.005em;
+        }
+        .con-hours__row--muted .con-hours__time {
+            color: rgba(45, 42, 38, 0.35);
+            font-style: italic;
+        }
+
+        /* Map */
+        .con-map {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background: #2d2a26;
+            margin-top: 1.5rem;
+        }
+        .con-map iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(60%) contrast(105%);
+            transition: filter 0.6s;
+        }
+        .con-map:hover iframe {
+            filter: grayscale(0%) contrast(100%);
+        }
+        .con-map__badge {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: #f3f1ec;
+            color: #2d2a26;
+            padding: 0.6rem 1rem;
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        /* Form success overlay */
+        .con-success {
+            position: fixed;
+            inset: 0;
+            z-index: 150;
+            background: rgba(26, 24, 21, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+            padding: 2rem;
+        }
+        .con-success.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .con-success__inner {
+            background: #f3f1ec;
+            max-width: 520px;
+            width: 100%;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .con-success.is-open .con-success__inner {
+            transform: translateY(0);
+        }
+        .con-success__mark {
+            width: 56px;
+            height: 56px;
+            border: 1px solid #4f5c4e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.75rem;
+        }
+        .con-success__mark svg {
+            width: 24px;
+            height: 24px;
+            stroke: #4f5c4e;
+            stroke-width: 1.5;
+            fill: none;
+        }
+        .con-success__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            color: #2d2a26;
+            margin-bottom: 1rem;
+        }
+        .con-success__desc {
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 1.65;
+            color: rgba(45, 42, 38, 0.7);
+            margin-bottom: 2rem;
+        }
+        .con-success__close {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 1rem 2rem;
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background 0.4s;
+        }
+        .con-success__close:hover {
+            background: #2d2a26;
+        }
+
+        /* Editorial number */
+        .con-editorial-number {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(8rem, 22vw, 20rem);
+            line-height: 0.82;
+            letter-spacing: -0.05em;
+            color: rgba(243, 241, 236, 0.06);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Eyebrow */
+        .con-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+        .con-eyebrow::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        /* Section number */
+        .con-section-num {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.35em;
+            color: rgba(79, 92, 78, 0.5);
+        }
+
+        /* Response promise */
+        .con-promise {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(79, 92, 78, 0.06);
+            border-left: 2px solid #4f5c4e;
+            margin-top: 2rem;
+        }
+        .con-promise__icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+        }
+        .con-promise__icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #4f5c4e;
+            stroke-width: 1.5;
+            fill: none;
+        }
+        .con-promise__text {
+            font-weight: 300;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(45, 42, 38, 0.7);
+        }
+    </style>
+</head>
+<body class="font-sans font-light bg-mist">
+
+    <div id="loader" class="fixed inset-0 z-[100] bg-charcoal flex items-center justify-center text-mist flex-col pointer-events-none">
+        <img id="loader-logo"
+             src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white2.png"
+             alt="Singgah Sana"
+             class="h-28 md:h-48 lg:h-56 w-auto opacity-0 transform scale-110">
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-40 bg-transparent px-6 md:px-12 pt-6 pb-4 transition-transform duration-500 nav-visible">
+        <div class="flex justify-between items-center text-xs md:text-sm tracking-wide text-mist drop-shadow-md">
+            <div class="hidden md:block w-1/3 text-left uppercase tracking-widest text-[10px] md:text-xs font-medium opacity-90">
+                Traditional Malay private estate
+            </div>
+            <div class="w-1/2 md:w-1/3 text-left md:text-center font-serif text-xl md:text-2xl font-bold uppercase tracking-widest">
+                <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white.png" alt="Singgah Sana" class="h-8 md:h-20 w-auto inline-block" />
+            </div>
+            <div class="w-1/2 md:w-1/3 text-right flex justify-end">
+                <button id="menuBtn" class="flex items-center gap-2 hover:text-moss transition-colors duration-300 uppercase tracking-widest text-xs font-medium">
+                    <span>Menu</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="fixed inset-0 bg-charcoal text-mist z-50 flex flex-col justify-center items-center clip-menu-hidden transition-all duration-700">
+        <button id="closeBtn" class="absolute top-8 right-6 md:right-12 text-xs uppercase tracking-widest hover:text-seafoam transition-colors flex items-center gap-2">
+            <span>Close</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex flex-col space-y-5 md:space-y-7 text-center font-serif text-3xl md:text-5xl">
+            <a href="index.html" class="menu-link hover:text-seafoam transition-colors duration-300">Home</a>
+            <a href="private-estate.html" class="menu-link hover:text-seafoam transition-colors duration-300">Private Estate</a>
+            <a href="experience.html" class="menu-link hover:text-seafoam transition-colors duration-300">Experience</a>
+            <a href="events.html" class="menu-link hover:text-seafoam transition-colors duration-300">Events</a>
+            <a href="gallery.html" class="menu-link hover:text-seafoam transition-colors duration-300">Gallery</a>
+            <a href="faq.html" class="menu-link hover:text-seafoam transition-colors duration-300">FAQ</a>
+            <a href="contact.html" class="menu-link hover:text-seafoam transition-colors duration-300">Contact</a>
+        </div>
+    </div>
+
+    <main id="smooth-wrapper" class="bg-mist">
+        <div id="smooth-content">
+            
+           <!-- ============================================================
+                 HERO — BLOG (centered editorial, dark)
+                 ============================================================ -->
+            <section id="blog-hero" class="relative w-full min-h-screen bg-charcoal text-mist overflow-hidden flex flex-col">
+                <div class="absolute inset-0 texture-overlay opacity-20"></div>
+
+                <!-- Editorial number background -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blog-editorial-number pointer-events-none select-none">
+                </div>
+
+                <div class="relative z-10 flex-1 flex flex-col justify-center items-center px-6 md:px-12 pt-36 md:pt-44 pb-12 text-center">
+                    <div class="max-w-4xl mx-auto w-full">
+                        <div class="blog-eyebrow text-seafoam justify-center mb-10 reveal-fade" style="justify-content:center;">
+                            Lorem
+                        </div>
+                        <h1 class="font-serif leading-[1.02] tracking-tight mb-10 reveal-fade" style="font-size: clamp(2.75rem, 8vw, 7rem);">
+                            Contact<br>
+                        </h1>
+                        <p class="text-mist/60 font-light text-base md:text-lg leading-relaxed max-w-xl mx-auto reveal-fade">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 px-6 md:px-12 pb-10">
+                    <div class="max-w-4xl mx-auto flex items-end justify-between border-t border-mist/20 pt-6">
+                        <div class="text-[10px] tracking-[0.28em] uppercase text-mist/50">
+                            Lorem · Lorem
+                        </div>
+                        <div class="text-2xl text-mist/70">&darr;</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 FORM + INFO — split layout
+                 ============================================================ -->
+            <section id="contact-main" class="py-24 md:py-32 px-6 md:px-12 bg-mist relative">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="con-split">
+
+                        <!-- LEFT — Form -->
+                        <div class="reveal-fade">
+                            <div class="mb-12">
+                                <span class="con-section-num block mb-4">(01)</span>
+                                <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl leading-[1.1] text-charcoal tracking-tight">
+                                    Send an enquiry.
+                                </h2>
+                            </div>
+
+                            <form id="contactForm" novalidate>
+                                <!-- Enquiry type chips -->
+                                <div class="con-field">
+                                    <label class="con-field__label">I'm writing about</label>
+                                    <div class="con-chips">
+                                        <div class="con-chip">
+                                            <input type="radio" name="enquiry_type" id="type-stay" value="Stay" checked>
+                                            <label for="type-stay" class="con-chip__label">A Stay</label>
+                                        </div>
+                                        <div class="con-chip">
+                                            <input type="radio" name="enquiry_type" id="type-event" value="Event">
+                                            <label for="type-event" class="con-chip__label">An Event</label>
+                                        </div>
+                                        <div class="con-chip">
+                                            <input type="radio" name="enquiry_type" id="type-wedding" value="Wedding">
+                                            <label for="type-wedding" class="con-chip__label">A Wedding</label>
+                                        </div>
+                                        <div class="con-chip">
+                                            <input type="radio" name="enquiry_type" id="type-retreat" value="Retreat">
+                                            <label for="type-retreat" class="con-chip__label">A Retreat</label>
+                                        </div>
+                                        <div class="con-chip">
+                                            <input type="radio" name="enquiry_type" id="type-other" value="Other">
+                                            <label for="type-other" class="con-chip__label">Something Else</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Name -->
+                                <div class="con-field">
+                                    <label class="con-field__label" for="conName">Your name</label>
+                                    <input type="text" id="conName" name="name" class="con-field__input" placeholder="Full name" required />
+                                </div>
+
+                                <!-- Email -->
+                                <div class="con-field">
+                                    <label class="con-field__label" for="conEmail">Email</label>
+                                    <input type="email" id="conEmail" name="email" class="con-field__input" placeholder="you@example.com" required />
+                                </div>
+
+                                <!-- Phone (optional) -->
+                                <div class="con-field">
+                                    <label class="con-field__label" for="conPhone">Phone <span style="text-transform:none; letter-spacing:0; opacity:0.5;">(optional)</span></label>
+                                    <input type="tel" id="conPhone" name="phone" class="con-field__input" placeholder="+60 ..." />
+                                </div>
+
+                                <!-- Dates -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                                    <div class="con-field">
+                                        <label class="con-field__label" for="conDateFrom">Arrival</label>
+                                        <input type="date" id="conDateFrom" name="date_from" class="con-field__input" />
+                                    </div>
+                                    <div class="con-field">
+                                        <label class="con-field__label" for="conDateTo">Departure</label>
+                                        <input type="date" id="conDateTo" name="date_to" class="con-field__input" />
+                                    </div>
+                                </div>
+
+                                <!-- Guests -->
+                                <div class="con-field">
+                                    <label class="con-field__label" for="conGuests">Number of guests</label>
+                                    <select id="conGuests" name="guests" class="con-field__select">
+                                        <option value="">Select…</option>
+                                        <option value="1-2">1 – 2 guests</option>
+                                        <option value="3-4">3 – 4 guests</option>
+                                        <option value="5-8">5 – 8 guests</option>
+                                        <option value="9-16">9 – 16 guests</option>
+                                        <option value="17-40">17 – 40 guests</option>
+                                        <option value="41-80">41 – 80 guests</option>
+                                    </select>
+                                </div>
+
+                                <!-- Message -->
+                                <div class="con-field">
+                                    <label class="con-field__label" for="conMessage">A few words</label>
+                                    <textarea id="conMessage" name="message" class="con-field__textarea" placeholder="Tell us what you have in mind…" required></textarea>
+                                </div>
+
+                                <!-- Submit -->
+                                <button type="submit" class="con-submit">
+                                    Send Enquiry
+                                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </button>
+
+                                <!-- Promise -->
+                                <div class="con-promise">
+                                    <div class="con-promise__icon">
+                                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 2"/></svg>
+                                    </div>
+                                    <p class="con-promise__text">
+                                        We reply to every enquiry within 24 hours, usually sooner. If your dates are urgent, mention it in your message.
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- RIGHT — Contact info -->
+                        <div class="con-info-sticky reveal-fade">
+                            <div class="mb-8">
+                                <span class="con-section-num block mb-4">(02)</span>
+                                <h2 class="font-serif text-3xl md:text-4xl leading-[1.1] text-charcoal tracking-tight">
+                                    Or reach us directly.
+                                </h2>
+                            </div>
+
+                            <!-- Direct contact card -->
+                            <div class="con-card">
+                                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                                <div class="relative z-10">
+                                    <span class="con-card__label">Direct Line</span>
+                                    <h3 class="con-card__title">Concierge</h3>
+                                    <p class="con-card__desc">
+                                        For immediate questions, the fastest way to reach us is WhatsApp or email.
+                                    </p>
+
+                                    <div class="con-row">
+                                        <div class="con-row__icon">
+                                            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M4 6h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z"/></svg>
+                                        </div>
+                                        <div class="con-row__content">
+                                            <div class="con-row__title">Email</div>
+                                            <div class="con-row__value">hello@singgah-sana.com</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="con-row">
+                                        <div class="con-row__icon">
+                                            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+                                        </div>
+                                        <div class="con-row__content">
+                                            <div class="con-row__title">Phone / WhatsApp</div>
+                                            <div class="con-row__value">+60 00000000</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="con-row">
+                                        <div class="con-row__icon">
+                                            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                        </div>
+                                        <div class="con-row__content">
+                                            <div class="con-row__title">Estate</div>
+                                            <div class="con-row__value">Kampung Janda Baik, Pahang</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Office hours card -->
+                            <div class="con-card--light">
+                                <span class="con-card__label">Hours</span>
+                                <h3 class="con-card__title">Lorem</h3>
+                                <p class="con-card__desc">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
+                                </p>
+
+                                <div class="con-hours">
+                                    <div class="con-hours__row">
+                                        <span class="con-hours__day">Monday — Friday</span>
+                                        <span class="con-hours__time">0?:00 — 0?:00</span>
+                                    </div>
+                                    <div class="con-hours__row">
+                                        <span class="con-hours__day">Saturday</span>
+                                        <span class="con-hours__time">0?:00 — 0?:00</span>
+                                    </div>
+                                    <div class="con-hours__row con-hours__row--muted">
+                                        <span class="con-hours__day">Sunday</span>
+                                        <span class="con-hours__time">0?:00 — 0?:00</span>
+                                    </div>
+                                    <div class="con-hours__row con-hours__row--muted">
+                                        <span class="con-hours__day">Public Holidays</span>
+                                        <span class="con-hours__time">0?:00 — 0?:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 LOCATION — map full-bleed
+                 ============================================================ -->
+            <section id="contact-location" class="py-24 md:py-32 px-6 md:px-12 bg-sand/40 relative">
+                <div class="absolute inset-0 texture-overlay opacity-30"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-16">
+                        <div class="lg:col-span-5">
+                            <span class="con-section-num block mb-4">(03)</span>
+                            <h2 class="split-text font-serif text-3xl md:text-5xl leading-[1.1] text-charcoal tracking-tight mb-8">
+                                Find the estate.
+                            </h2>
+                            <p class="text-charcoal/60 font-light text-base leading-relaxed max-w-md reveal-fade">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            </p>
+                        </div>
+
+                        <div class="lg:col-span-7">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="reveal-fade">
+                                    <div class="con-section-num mb-3">By Car</div>
+                                    <p class="text-charcoal/70 font-light text-sm leading-relaxed">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                    </p>
+                                </div>
+                                <div class="reveal-fade">
+                                    <div class="con-section-num mb-3">By Transfer</div>
+                                    <p class="text-charcoal/70 font-light text-sm leading-relaxed">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="con-map reveal-fade">
+                        <div class="con-map__badge">Janda Baik · Pahang</div>
+                        <iframe
+                            src="https://www.google.com/maps?q=Kampung+Janda+Baik,+Bentong,+Pahang&output=embed"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Map of Singgah Sana location"
+                        ></iframe>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-8 reveal-fade">
+                        <address class="not-italic font-light text-charcoal/70 text-sm leading-relaxed">
+                            No.3 Lorong Cheringin · Kampung Janda Baik · 28750 Bentong · Pahang · Malaysia
+                        </address>
+                        <a href="https://maps.app.goo.gl/U5hAkqrDFPQwzhny7" target="_blank" rel="noopener" class="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-charcoal border-b border-charcoal/40 pb-1 hover:gap-5 hover:border-moss hover:text-moss transition-all duration-500">
+                            Open in Maps
+                            <span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CTA — closing
+                 ============================================================ -->
+            <section id="contact-cta" class="py-24 md:py-32 px-6 md:px-12 bg-mist relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-5xl mx-auto relative z-10 text-center">
+                    <span class="text-[10px] tracking-[0.3em] uppercase text-moss font-medium mb-8 block reveal-fade">
+                        While You Wait
+                    </span>
+                    <h2 class="split-text font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] text-charcoal tracking-tight mb-10">
+                        Explore the <em class="text-moss">estate</em> in the meantime.
+                    </h2>
+                    <p class="text-charcoal/60 font-light text-base md:text-lg max-w-xl mx-auto mb-12 reveal-fade">
+                        Browse the pavilions, experiences, and the visual archive while we write back.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 reveal-fade">
+                        <a href="private-estate.html" class="inline-block bg-charcoal text-mist px-10 py-4 text-[10px] tracking-[0.28em] uppercase font-medium hover:bg-moss transition-all duration-500">
+                            The Estate
+                        </a>
+                        <a href="gallery.html" class="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-charcoal border-b border-charcoal/40 pb-1 hover:gap-5 hover:border-moss hover:text-moss transition-all duration-500">
+                            View Gallery
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+             <footer id="availability" class="bg-moss text-mist pt-24 pb-12 px-6 md:px-12 relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div id="enquire" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-24 border-b border-mist/20 pb-24">
+                        <div>
+                            <span class="text-[10px] tracking-[0.2em] uppercase text-seafoam mb-8 block reveal-fade">Enquire</span>
+                            <h2 class="font-serif text-5xl md:text-6xl mb-8 leading-[1.1] text-mist tracking-tight split-text">
+                                Begin your <em class="text-seafoam">stay</em>.
+                            </h2>
+                            <p class="text-mist/70 font-light text-base md:text-lg max-w-md mb-10 reveal-fade">
+                                The entire estate can be yours. Enquire about availability, rates, and bespoke experiences.
+                            </p>
+                            <a href="contact.html" class="reveal-fade inline-block border border-mist px-8 py-4 text-xs tracking-[0.2em] uppercase hover:bg-mist hover:text-moss transition-all duration-300">
+                                Contact Us
+                            </a>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 lg:justify-end mt-8 lg:mt-16">
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Discover</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="about.html" class="footer-link">About</a></li>
+                                    <li><a href="blog.html" class="footer-link">Blog</a></li>
+                                    <li><a href="faq.html" class="footer-link">FAQ</a></li>
+                                    <li><a href="policy.html" class="footer-link">Policy</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Contact</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="#" class="footer-link">hello@singgah-sana.com</a></li>
+                                    <li><a href="#" class="footer-link">+60 00000000</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Location</h4>
+                                <address class="not-italic font-light text-mist/80 text-base leading-relaxed">
+                                    No.3 Lorong Cheringin<br>
+                                    Kampung Janda Baik<br>
+                                    28750 Bentong, Pahang<br>
+                                    Malaysia
+                                </address>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-center text-[10px] text-mist/50 uppercase tracking-[0.2em] font-medium reveal-fade">
+                        <p class="mb-4 md:mb-0">&copy; 2026 Singgah Sana. All rights reserved.</p>
+                        <div class="flex flex-wrap gap-6 justify-center">
+                            <a href="#" class="hover:text-mist transition-colors">Instagram</a>
+                            <a href="#" class="hover:text-mist transition-colors">Facebook</a>
+                            <a href="#" class="hover:text-mist transition-colors">TripAdvisor</a>
+                            <a href="#" class="hover:text-mist transition-colors">TikTok</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- SUCCESS OVERLAY -->
+    <div id="contactSuccess" class="con-success" aria-hidden="true">
+        <div class="con-success__inner">
+            <div class="con-success__mark">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="con-success__title">Thank you.</h3>
+            <p class="con-success__desc">
+                Your enquiry has reached us. We'll write back personally within 24 hours. In the meantime, take a slow look around the estate.
+            </p>
+            <button class="con-success__close" id="contactSuccessClose">
+                Continue Exploring
+            </button>
+        </div>
+    </div>
+
+    <!-- LIVE CHAT -->
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-header">
+            <div>
+                <div class="chat-header-title">Live Chat Singgah Sana</div>
+                <div class="chat-header-status">Online · Replies within minutes</div>
+            </div>
+            <button id="chatClose" class="chat-close" aria-label="Close chat">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="chatBody" class="chat-body"></div>
+
+        <div class="chat-input-wrap">
+            <div class="chat-input-row">
+                <textarea id="chatInput" class="chat-input" rows="1" placeholder="Write a message..."></textarea>
+                <button id="chatSend" class="chat-send" aria-label="Send">
+                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            Lorem ipsum
+        </div>
+    </div>
+
+    <button id="chatButton" class="chat-button" aria-label="Open chat">
+        <svg viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+        </svg>
+        <span>Live Chat</span>
+    </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            gsap.config({ force3D: true });
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+            gsap.ticker.lagSmoothing(0); 
+
+            document.body.style.overflow = "hidden";
+
+            // Loader
+            const tlLoader = gsap.timeline({
+                onComplete: () => {
+                    document.body.style.overflow = ""; 
+                }
+            });
+
+            tlLoader
+                .to("#loader-logo", { opacity: 1, scale: 1.5, duration: 2, ease: "power3.out" })
+                .to("#loader-logo", { opacity: 0, y: -30, duration: 1, ease: "power2.inOut" }, "+=0.5")
+                .to("#loader", { yPercent: -100, duration: 1, ease: "power3.inOut" });
+
+            // Navbar
+            let lastScroll = 0;
+            const navbar = document.getElementById('navbar');
+            
+            lenis.on('scroll', (e) => {
+                const currentScroll = e.animatedScroll;
+                if (!document.getElementById('menuOverlay').classList.contains('clip-menu-visible')) {
+                    if (currentScroll > 50) {
+                        navbar.classList.replace('bg-transparent', 'bg-charcoal');
+                        if (currentScroll > lastScroll) {
+                            navbar.classList.remove('nav-visible');
+                            navbar.classList.add('nav-hidden');
+                        } else {
+                            navbar.classList.remove('nav-hidden');
+                            navbar.classList.add('nav-visible');
+                        }
+                    } else {
+                        navbar.classList.replace('bg-charcoal', 'bg-transparent');
+                        navbar.classList.remove('nav-hidden');
+                        navbar.classList.add('nav-visible');
+                    }
+                }
+                lastScroll = currentScroll;
+            });
+
+            // Menu
+            const menuBtn = document.getElementById('menuBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            function toggleMenu() {
+                menuOverlay.classList.toggle('clip-menu-visible');
+                menuOverlay.classList.toggle('clip-menu-hidden');
+                
+                if(menuOverlay.classList.contains('clip-menu-visible')) {
+                    lenis.stop();
+                } else {
+                    lenis.start();
+                }
+            }
+
+            menuBtn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuOverlay.classList.remove('clip-menu-visible');
+                    menuOverlay.classList.add('clip-menu-hidden');
+                    lenis.start();
+                });
+            });
+
+            // Typography Reveals
+            const splitHeadings = new SplitType('.split-text', { types: 'lines' });
+            
+            const wrapLines = (splitInstance) => {
+                splitInstance.lines.forEach(line => {
+                    if (!line.parentElement.classList.contains('line-wrapper')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('line-wrapper');
+                        line.parentNode.insertBefore(wrapper, line);
+                        wrapper.appendChild(line);
+                        gsap.set(line, { yPercent: 120, rotationZ: 2, opacity: 0 });
+                    }
+                });
+            };
+
+            wrapLines(splitHeadings);
+
+            ScrollTrigger.batch(splitHeadings.elements, {
+                start: "top 85%",
+                onEnter: batch => {
+                    batch.forEach(el => {
+                        gsap.to(el.querySelectorAll('.line'), {
+                            yPercent: 0, rotationZ: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: "power3.out"
+                        });
+                    });
+                }
+            });
+
+            // Fade in
+            ScrollTrigger.batch('.reveal-fade', {
+                start: "top 92%",
+                onEnter: batch => {
+                    gsap.fromTo(batch, 
+                        { y: 24, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: "power2.out", overwrite: true }
+                    );
+                }
+            });
+
+            // ============================================================
+            // CONTACT FORM — submit + validation
+            // ============================================================
+            const contactForm = document.getElementById('contactForm');
+            const contactSuccess = document.getElementById('contactSuccess');
+            const contactSuccessClose = document.getElementById('contactSuccessClose');
+
+            function openSuccess() {
+                contactSuccess.classList.add('is-open');
+                contactSuccess.setAttribute('aria-hidden', 'false');
+                lenis.stop();
+            }
+
+            function closeSuccess() {
+                contactSuccess.classList.remove('is-open');
+                contactSuccess.setAttribute('aria-hidden', 'true');
+                lenis.start();
+            }
+
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    // Simple validation
+                    const name = document.getElementById('conName');
+                    const email = document.getElementById('conEmail');
+                    const message = document.getElementById('conMessage');
+
+                    let valid = true;
+
+                    [name, email, message].forEach(field => {
+                        if (!field.value.trim()) {
+                            valid = false;
+                            field.style.borderBottomColor = '#c9704a';
+                        } else {
+                            field.style.borderBottomColor = '';
+                        }
+                    });
+
+                    if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+                        valid = false;
+                        email.style.borderBottomColor = '#c9704a';
+                    }
+
+                    if (!valid) return;
+
+                    // Fake submit
+                    openSuccess();
+                });
+            }
+
+            if (contactSuccessClose) {
+                contactSuccessClose.addEventListener('click', closeSuccess);
+            }
+
+            if (contactSuccess) {
+                contactSuccess.addEventListener('click', (e) => {
+                    if (e.target === contactSuccess) closeSuccess();
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && contactSuccess.classList.contains('is-open')) {
+                        closeSuccess();
+                    }
+                });
+            }
+
+            // Reset border on input
+            document.querySelectorAll('.con-field__input, .con-field__textarea').forEach(field => {
+                field.addEventListener('input', () => {
+                    field.style.borderBottomColor = '';
+                });
+            });
+
+            // Resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    splitHeadings.revert();
+                    splitHeadings.split();
+                    wrapLines(splitHeadings);
+                    ScrollTrigger.refresh();
+                }, 200);
+            });
+
+            // ============================================================
+            // LIVE CHAT — Concierge
+            // ============================================================
+            const chatPanel = document.getElementById('chatPanel');
+            const chatButton = document.getElementById('chatButton');
+            const chatClose = document.getElementById('chatClose');
+            const chatBody = document.getElementById('chatBody');
+            const chatInput = document.getElementById('chatInput');
+            const chatSend = document.getElementById('chatSend');
+
+            let chatOpen = false;
+            let isTyping = false;
+            const CHAT_STORAGE_KEY = 'singgahChatHistory_v1';
+
+            let chatHistory = [];
+            try {
+                chatHistory = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+            } catch (e) {
+                chatHistory = [];
+            }
+
+            function getTimeString() {
+                const now = new Date();
+                return now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const initialBotMessages = [
+                {
+                    type: 'bot',
+                    text: 'Welcome to Singgah Sana. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    time: getTimeString()
+                },
+                {
+                    type: 'bot',
+                    text: 'How may I assist you today?',
+                    time: getTimeString(),
+                    quickReplies: ['Lorem', 'Lorem', 'Lorem', 'Lorem']
+                }
+            ];
+
+            function getBotReply(userText) {
+                const lower = userText.toLowerCase().trim();
+
+                if (/^(hi|hello|hey|good morning|good afternoon|good evening|greetings|selamat|hai)/.test(lower)) {
+                    return {
+                        text: 'Hello, lorem ipsum dolor sit amet consectetur adipiscing elit sed do?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(book|reserve|reservation|stay|room|pavilion|accommodation|available|availability|check.?in|check.?out)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(rate|price|cost|how much|pricing|fee|expensive|cheap|budget)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Cancellation policy']
+                    };
+                }
+
+                if (/(cancel|cancellation|refund|policy|deposit|penalty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See full policy', 'Ask another question']
+                    };
+                }
+
+                if (/(where|location|address|directions|how to get|far|distance|near|map|janda baik|bentong|pahang|kl|kuala lumpur)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Open in Maps', 'Airport transfer', 'Ask another question']
+                    };
+                }
+
+                if (/(activit|experience|things to do|do there|what can i do|yoga|fishing|hike|hiking|picnic|walk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See experiences', 'Book a stay']
+                    };
+                }
+
+                if (/(event|wedding|marriage|engagement|private dinner|meeting|conference|workshop|corporate|celebrat)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See events', 'Send an enquiry']
+                    };
+                }
+
+                if (/(child|children|kid|family|baby|infant|toddler)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(pet|dog|cat|animal)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(amenit|facilit|provide|include|wifi|wi-fi|air.?con|ac|towel|robe|toiletr|bedding|net|safe|incense|desk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(food|dining|dinner|lunch|breakfast|chef|meal|eat|menu|vegetarian|vegan|halal|allerg)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Book a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(accessib|wheelchair|mobility|disabled|elderly|walking difficulty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(airport|transfer|pickup|pick up|taxi|grab|transport|driver)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(wi.?fi|internet|connection|online)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Ask another question']
+                    };
+                }
+
+                if (/(thank|thanks|appreciat|grateful)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Goodbye']
+                    };
+                }
+
+                if (/(bye|goodbye|see you|farewell|that.s all|nothing else)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                    };
+                }
+
+                if (/(see room|see rooms|show rooms|open rooms)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'room.html'
+                    };
+                }
+
+                if (/(see experience|show experience|open experience|see experiences)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'experience.html'
+                    };
+                }
+
+                if (/(see event|show event|open event|see events|send.*enquir)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'events.html'
+                    };
+                }
+
+                if (/(see.*polic|open.*polic)/.test(lower)) {
+                    return {
+                        text: 'Opening our policy page for you now.',
+                        redirect: 'policy.html'
+                    };
+                }
+
+                if (/(map|open.*map|direction)/.test(lower)) {
+                    return {
+                        text: 'Opening our location in Maps for you now.',
+                        redirect: 'https://maps.app.goo.gl/U5hAkqrDFPQwzhny7'
+                    };
+                }
+
+                if (/(book a stay|booking a stay|reserve|make.*book)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        redirect: 'room.html'
+                    };
+                }
+
+                return {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                    quickReplies: ['Booking a stay', 'Things to do', 'Getting here']
+                };
+            }
+
+            function renderChat() {
+                if (chatHistory.length === 0) {
+                    chatHistory = [...initialBotMessages];
+                    saveChat();
+                }
+
+                chatBody.innerHTML = '';
+
+                chatHistory.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = `chat-msg chat-msg--${msg.type}`;
+
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-msg__bubble';
+                    bubble.textContent = msg.text;
+                    div.appendChild(bubble);
+
+                    if (msg.quickReplies && msg.quickReplies.length > 0) {
+                        const quick = document.createElement('div');
+                        quick.className = 'chat-quick';
+                        msg.quickReplies.forEach(reply => {
+                            const btn = document.createElement('button');
+                            btn.textContent = reply;
+                            btn.addEventListener('click', () => handleQuickReply(reply));
+                            quick.appendChild(btn);
+                        });
+                        div.appendChild(quick);
+                    }
+
+                    const time = document.createElement('div');
+                    time.className = 'chat-msg__time';
+                    time.textContent = msg.time || '';
+                    div.appendChild(time);
+
+                    chatBody.appendChild(div);
+                });
+
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function saveChat() {
+                try {
+                    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+                } catch (e) {}
+            }
+
+            function addMessage(msg) {
+                chatHistory.push(msg);
+                saveChat();
+                renderChat();
+            }
+
+            function showTyping() {
+                const typing = document.createElement('div');
+                typing.className = 'chat-typing';
+                typing.id = 'chatTyping';
+                typing.innerHTML = '<span></span><span></span><span></span>';
+                chatBody.appendChild(typing);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+            function hideTyping() {
+                const t = document.getElementById('chatTyping');
+                if (t) t.remove();
+            }
+
+            function handleQuickReply(reply) {
+                addMessage({
+                    type: 'user',
+                    text: reply,
+                    time: getTimeString()
+                });
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(reply);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 500);
+            }
+
+            function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text || isTyping) return;
+
+                addMessage({
+                    type: 'user',
+                    text: text,
+                    time: getTimeString()
+                });
+
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(text);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 600);
+            }
+
+            function openChat() {
+                chatOpen = true;
+                chatPanel.classList.add('is-open');
+                chatButton.classList.add('is-hidden');
+                setTimeout(() => chatInput.focus(), 400);
+            }
+
+            function closeChat() {
+                chatOpen = false;
+                chatPanel.classList.remove('is-open');
+                chatButton.classList.remove('is-hidden');
+            }
+
+            chatButton.addEventListener('click', openChat);
+            chatClose.addEventListener('click', closeChat);
+            chatSend.addEventListener('click', sendMessage);
+
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            chatInput.addEventListener('input', () => {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
+            });
+
+            const hasAutoOpened = sessionStorage.getItem('singgahChatAutoOpened');
+            if (!hasAutoOpened && window.innerWidth > 1024) {
+                setTimeout(() => {
+                    if (!chatOpen) {
+                        openChat();
+                        sessionStorage.setItem('singgahChatAutoOpened', '1');
+                    }
+                }, 12000);
+            }
+
+            renderChat();
+        });
+    </script>
+</body>
+</html>

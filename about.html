@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Singgah Sana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mist': '#f3f1ec',
+                        'seafoam': '#95c9b9',
+                        'moss': '#4f5c4e',
+                        'charcoal': '#2d2a26',
+                        'sand': '#e8e2d5',
+                        'clay': '#c9a88a',
+                        'ink': '#1a1815',
+                        'paper': '#faf8f4',
+                    },
+                    fontFamily: {
+                        serif: ['Marcellus', 'serif'],
+                        sans: ['"Work Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f3f1ec;
+            color: #2d2a26;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+        .line-wrapper {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: top;
+            padding-bottom: 0.1em;
+        }
+        
+        .img-reveal-container {
+            overflow: hidden;
+            position: relative;
+            transform: translateZ(0);
+            background-color: rgba(45, 42, 38, 0.1);
+        }
+
+        ::selection { background-color: #4f5c4e; color: #f3f1ec; }
+        
+        .nav-hidden { transform: translate3d(0, -100%, 0); }
+        .nav-visible { transform: translate3d(0, 0, 0); }
+
+        .clip-menu-hidden { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+        .clip-menu-visible { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+        .texture-overlay {
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           FOOTER LINKS
+           ============================================================ */
+        .footer-link {
+            display: inline-block;
+            font-size: 0.95rem;
+            color: rgba(243, 241, 236, 0.75);
+            transition: color 0.4s, padding-left 0.4s;
+            position: relative;
+        }
+        .footer-link:hover {
+            color: #f3f1ec;
+            padding-left: 8px;
+        }
+        .footer-link::before {
+            content: '·';
+            position: absolute;
+            left: -4px;
+            opacity: 0;
+            transition: opacity 0.4s, left 0.4s;
+            color: #95c9b9;
+        }
+        .footer-link:hover::before {
+            opacity: 1;
+            left: -8px;
+        }
+
+        /* ============================================================
+           LIVE CHAT — posisi KIRI bawah
+           ============================================================ */
+        .chat-button {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 60;
+            height: 52px;
+            padding: 0 20px 0 16px;
+            border-radius: 999px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(45, 42, 38, 0.28);
+            transition: background 0.4s, transform 0.4s, box-shadow 0.4s, opacity 0.4s;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+        }
+        .chat-button:hover {
+            background: #2d2a26;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(45, 42, 38, 0.35);
+        }
+        .chat-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 1.75;
+            fill: none;
+        }
+        .chat-button::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 999px;
+            border: 1px solid #95c9b9;
+            opacity: 0;
+            animation: chatPulse 3.4s ease-out infinite;
+            pointer-events: none;
+        }
+        @keyframes chatPulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 0; transform: scale(1.15); }
+        }
+        .chat-button.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 92px;
+            left: 24px;
+            z-index: 61;
+            width: 400px;
+            max-width: calc(100vw - 48px);
+            height: 600px;
+            max-height: calc(100vh - 140px);
+            background: #f3f1ec;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 60px rgba(45, 42, 38, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.98);
+            transform-origin: bottom left;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0.4s,
+                        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .chat-panel.is-open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .chat-header {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 20px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-header-title {
+            font-family: 'Marcellus', serif;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+        }
+        .chat-header-status {
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            font-family: 'Work Sans', sans-serif;
+        }
+        .chat-header-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #95c9b9;
+            animation: chatStatusPulse 2s ease-in-out infinite;
+        }
+        @keyframes chatStatusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: #f3f1ec;
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.75;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .chat-close:hover { opacity: 1; }
+        .chat-close svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #f3f1ec;
+            scroll-behavior: smooth;
+        }
+        .chat-body::-webkit-scrollbar { width: 4px; }
+        .chat-body::-webkit-scrollbar-thumb {
+            background: rgba(79, 92, 78, 0.25);
+            border-radius: 2px;
+        }
+
+        .chat-msg {
+            max-width: 86%;
+            font-size: 13.5px;
+            line-height: 1.55;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        @keyframes msgIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-msg--bot { align-self: flex-start; }
+        .chat-msg--user { align-self: flex-end; }
+        .chat-msg__bubble {
+            padding: 12px 16px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 300;
+            border-radius: 2px;
+        }
+        .chat-msg--bot .chat-msg__bubble {
+            background: #ffffff;
+            color: #2d2a26;
+            border-left: 2px solid #4f5c4e;
+        }
+        .chat-msg--user .chat-msg__bubble {
+            background: #4f5c4e;
+            color: #f3f1ec;
+        }
+        .chat-msg__time {
+            font-size: 9px;
+            color: rgba(45, 42, 38, 0.4);
+            margin-top: 5px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        .chat-msg--user .chat-msg__time { text-align: right; }
+
+        .chat-typing {
+            align-self: flex-start;
+            max-width: 86%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-left: 2px solid #4f5c4e;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            opacity: 0;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .chat-typing span {
+            width: 6px;
+            height: 6px;
+            background: #4f5c4e;
+            border-radius: 50%;
+            opacity: 0.35;
+            animation: typingBounce 1.2s ease-in-out infinite;
+        }
+        .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-quick {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .chat-quick button {
+            background: transparent;
+            border: 1px solid rgba(79, 92, 78, 0.3);
+            color: #4f5c4e;
+            padding: 7px 13px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            border-radius: 2px;
+        }
+        .chat-quick button:hover {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+
+        .chat-input-wrap {
+            border-top: 1px solid rgba(79, 92, 78, 0.15);
+            padding: 14px 18px;
+            background: #f3f1ec;
+            flex-shrink: 0;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13.5px;
+            color: #2d2a26;
+            padding: 8px 0;
+            resize: none;
+            outline: none;
+            max-height: 80px;
+            line-height: 1.5;
+        }
+        .chat-input::placeholder { color: rgba(45, 42, 38, 0.4); }
+        .chat-send {
+            width: 38px;
+            height: 38px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.3s;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+        .chat-send:hover {
+            background: #2d2a26;
+            transform: translateY(-1px);
+        }
+        .chat-send svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        .chat-send:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .chat-footer {
+            text-align: center;
+            padding: 10px 20px 14px;
+            font-size: 9.5px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.5);
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .chat-panel {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                bottom: 0;
+                right: 0;
+                top: 0;
+                left: 0;
+            }
+            .chat-button {
+                bottom: 20px;
+                left: 20px;
+                height: 48px;
+                padding: 0 16px 0 14px;
+                font-size: 10px;
+            }
+            .chat-panel.is-open ~ .chat-button {
+                display: none;
+            }
+        }
+
+        /* ============================================================
+           ABOUT PAGE — UI/UX KHUSUS
+           ============================================================ */
+
+        /* Hero — split image + text, dark */
+        .ab-hero-vertical {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        /* Chapter layout — sticky vertical indicator kiri + konten kanan */
+        .ab-chapter-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+        @media (min-width: 1024px) {
+            .ab-chapter-layout {
+                grid-template-columns: 80px 1fr;
+                gap: 5rem;
+            }
+        }
+
+        .ab-chapter-indicator {
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .ab-chapter-indicator {
+                position: sticky;
+                top: 120px;
+                align-self: start;
+            }
+        }
+
+        .ab-chapter-indicator__list {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-x: auto;
+        }
+        @media (min-width: 1024px) {
+            .ab-chapter-indicator__list {
+                flex-direction: column;
+                gap: 2rem;
+                overflow: visible;
+            }
+        }
+
+        .ab-chapter-dot {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-family: 'Marcellus', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(45, 42, 38, 0.35);
+            transition: color 0.4s;
+            white-space: nowrap;
+        }
+        @media (min-width: 1024px) {
+            .ab-chapter-dot {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.75rem;
+                font-size: 0.7rem;
+            }
+        }
+        .ab-chapter-dot:hover {
+            color: #4f5c4e;
+        }
+        .ab-chapter-dot.is-active {
+            color: #4f5c4e;
+        }
+        .ab-chapter-dot__mark {
+            position: relative;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid rgba(79, 92, 78, 0.4);
+            background: transparent;
+            transition: background 0.4s, border-color 0.4s;
+            flex-shrink: 0;
+        }
+        .ab-chapter-dot.is-active .ab-chapter-dot__mark {
+            background: #4f5c4e;
+            border-color: #4f5c4e;
+        }
+        .ab-chapter-dot.is-active .ab-chapter-dot__mark::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 1px solid rgba(79, 92, 78, 0.3);
+            animation: abDotPulse 2.4s ease-out infinite;
+        }
+        @keyframes abDotPulse {
+            0% { opacity: 0.6; transform: scale(0.9); }
+            100% { opacity: 0; transform: scale(1.4); }
+        }
+
+        /* Chapter blocks */
+        .ab-chapter {
+            padding: 4rem 0;
+            border-bottom: 1px solid rgba(79, 92, 78, 0.15);
+            scroll-margin-top: 120px;
+        }
+        .ab-chapter:first-child {
+            padding-top: 0;
+        }
+        .ab-chapter:last-child {
+            border-bottom: none;
+        }
+
+        .ab-chapter__label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.6);
+            margin-bottom: 2rem;
+        }
+        .ab-chapter__label::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+        .ab-chapter__num {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.4em;
+            color: rgba(79, 92, 78, 0.45);
+            margin-left: auto;
+        }
+
+        .ab-chapter__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(2rem, 4.5vw, 3.75rem);
+            line-height: 1.05;
+            letter-spacing: -0.015em;
+            color: #2d2a26;
+            margin-bottom: 2rem;
+            max-width: 22ch;
+        }
+
+        .ab-chapter__body {
+            font-weight: 300;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(45, 42, 38, 0.72);
+            max-width: 52rem;
+        }
+        .ab-chapter__body p + p {
+            margin-top: 1.5rem;
+        }
+
+        /* Pull quote */
+        .ab-pull-quote {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            color: #4f5c4e;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(79, 92, 78, 0.25);
+            border-bottom: 1px solid rgba(79, 92, 78, 0.25);
+            margin: 3rem 0;
+            position: relative;
+            max-width: 40rem;
+        }
+        .ab-pull-quote::before {
+            content: '"';
+            position: absolute;
+            top: 1.5rem;
+            left: -1.5rem;
+            font-family: 'Marcellus', serif;
+            font-size: 4rem;
+            line-height: 1;
+            color: rgba(79, 92, 78, 0.2);
+        }
+        @media (max-width: 640px) {
+            .ab-pull-quote::before {
+                left: 0;
+                top: -0.5rem;
+                font-size: 3rem;
+            }
+            .ab-pull-quote {
+                padding-top: 3rem;
+            }
+        }
+
+        /* Chapter image */
+        .ab-chapter-image {
+            margin: 3rem 0;
+        }
+
+        /* Timeline horizontal — heritage */
+        .ab-timeline-wrap {
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 2rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .ab-timeline-wrap::-webkit-scrollbar {
+            height: 3px;
+        }
+        .ab-timeline-wrap::-webkit-scrollbar-track {
+            background: rgba(79, 92, 78, 0.1);
+        }
+        .ab-timeline-wrap::-webkit-scrollbar-thumb {
+            background: rgba(79, 92, 78, 0.35);
+        }
+
+        .ab-timeline {
+            display: flex;
+            gap: 3rem;
+            padding: 2rem 0;
+            position: relative;
+            min-width: max-content;
+        }
+        .ab-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(79, 92, 78, 0.2);
+        }
+
+        .ab-timeline-item {
+            position: relative;
+            width: 220px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .ab-timeline-item__year {
+            font-family: 'Marcellus', serif;
+            font-size: 2rem;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: #4f5c4e;
+        }
+        .ab-timeline-item__dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #f3f1ec;
+            border: 1px solid #4f5c4e;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.4s, background 0.4s;
+        }
+        .ab-timeline-item:hover .ab-timeline-item__dot {
+            background: #4f5c4e;
+            transform: scale(1.4);
+        }
+        .ab-timeline-item__title {
+            font-family: 'Marcellus', serif;
+            font-size: 1.05rem;
+            line-height: 1.3;
+            color: #2d2a26;
+            letter-spacing: -0.005em;
+        }
+        .ab-timeline-item__desc {
+            font-weight: 300;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(45, 42, 38, 0.6);
+        }
+
+        /* Team / steward grid */
+        .ab-stewards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        @media (min-width: 640px) {
+            .ab-stewards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .ab-stewards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .ab-steward {
+            text-align: left;
+        }
+        .ab-steward__img {
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            background: rgba(79, 92, 78, 0.08);
+            margin-bottom: 1.25rem;
+        }
+        .ab-steward__img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: filter 0.6s, transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .ab-steward:hover .ab-steward__img img {
+            filter: grayscale(0%);
+            transform: scale(1.04);
+        }
+        .ab-steward__name {
+            font-family: 'Marcellus', serif;
+            font-size: 1.15rem;
+            letter-spacing: -0.005em;
+            color: #2d2a26;
+            margin-bottom: 0.25rem;
+        }
+        .ab-steward__role {
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.6);
+            margin-bottom: 0.75rem;
+        }
+        .ab-steward__desc {
+            font-weight: 300;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(45, 42, 38, 0.65);
+        }
+
+        /* Values grid */
+        .ab-values {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            border-top: 1px solid rgba(79, 92, 78, 0.2);
+        }
+        .ab-value {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 1.5rem;
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(79, 92, 78, 0.2);
+            align-items: start;
+        }
+        @media (min-width: 768px) {
+            .ab-value {
+                grid-template-columns: 80px 1fr 1.5fr;
+                gap: 2.5rem;
+                padding: 3rem 0;
+            }
+        }
+        .ab-value__num {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.35em;
+            color: rgba(79, 92, 78, 0.5);
+            padding-top: 0.5rem;
+        }
+        .ab-value__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+            color: #2d2a26;
+        }
+        .ab-value__desc {
+            font-weight: 300;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(45, 42, 38, 0.65);
+        }
+
+        /* Editorial number */
+        .ab-editorial-number {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(6rem, 16vw, 14rem);
+            line-height: 0.82;
+            letter-spacing: -0.05em;
+            color: rgba(79, 92, 78, 0.1);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Eyebrow */
+        .ab-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+        .ab-eyebrow::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        /* Section number */
+        .ab-section-num {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.35em;
+            color: rgba(79, 92, 78, 0.5);
+        }
+
+        /* Quote section */
+        .ab-quote-dark {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+            line-height: 1.25;
+            letter-spacing: -0.015em;
+            color: #f3f1ec;
+        }
+    </style>
+</head>
+<body class="font-sans font-light bg-mist">
+
+    <div id="loader" class="fixed inset-0 z-[100] bg-charcoal flex items-center justify-center text-mist flex-col pointer-events-none">
+        <img id="loader-logo"
+             src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white2.png"
+             alt="Singgah Sana"
+             class="h-28 md:h-48 lg:h-56 w-auto opacity-0 transform scale-110">
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-40 bg-transparent px-6 md:px-12 pt-6 pb-4 transition-transform duration-500 nav-visible">
+        <div class="flex justify-between items-center text-xs md:text-sm tracking-wide text-mist drop-shadow-md">
+            <div class="hidden md:block w-1/3 text-left uppercase tracking-widest text-[10px] md:text-xs font-medium opacity-90">
+                Traditional Malay private estate
+            </div>
+            <div class="w-1/2 md:w-1/3 text-left md:text-center font-serif text-xl md:text-2xl font-bold uppercase tracking-widest">
+                <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white.png" alt="Singgah Sana" class="h-8 md:h-20 w-auto inline-block" />
+            </div>
+            <div class="w-1/2 md:w-1/3 text-right flex justify-end">
+                <button id="menuBtn" class="flex items-center gap-2 hover:text-moss transition-colors duration-300 uppercase tracking-widest text-xs font-medium">
+                    <span>Menu</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="fixed inset-0 bg-charcoal text-mist z-50 flex flex-col justify-center items-center clip-menu-hidden transition-all duration-700">
+        <button id="closeBtn" class="absolute top-8 right-6 md:right-12 text-xs uppercase tracking-widest hover:text-seafoam transition-colors flex items-center gap-2">
+            <span>Close</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex flex-col space-y-5 md:space-y-7 text-center font-serif text-3xl md:text-5xl">
+            <a href="index.html" class="menu-link hover:text-seafoam transition-colors duration-300">Home</a>
+            <a href="private-estate.html" class="menu-link hover:text-seafoam transition-colors duration-300">Private Estate</a>
+            <a href="experience.html" class="menu-link hover:text-seafoam transition-colors duration-300">Experience</a>
+            <a href="events.html" class="menu-link hover:text-seafoam transition-colors duration-300">Events</a>
+            <a href="gallery.html" class="menu-link hover:text-seafoam transition-colors duration-300">Gallery</a>
+            <a href="faq.html" class="menu-link hover:text-seafoam transition-colors duration-300">FAQ</a>
+            <a href="contact.html" class="menu-link hover:text-seafoam transition-colors duration-300">Contact</a>
+        </div>
+    </div>
+
+    <main id="smooth-wrapper" class="bg-mist">
+        <div id="smooth-content">
+            
+           <!-- ============================================================
+                 HERO — BLOG (centered editorial, dark)
+                 ============================================================ -->
+            <section id="blog-hero" class="relative w-full min-h-screen bg-charcoal text-mist overflow-hidden flex flex-col">
+                <div class="absolute inset-0 texture-overlay opacity-20"></div>
+
+                <!-- Editorial number background -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blog-editorial-number pointer-events-none select-none">
+                </div>
+
+                <div class="relative z-10 flex-1 flex flex-col justify-center items-center px-6 md:px-12 pt-36 md:pt-44 pb-12 text-center">
+                    <div class="max-w-4xl mx-auto w-full">
+                        <div class="blog-eyebrow text-seafoam justify-center mb-10 reveal-fade" style="justify-content:center;">
+                            Lorem
+                        </div>
+                        <h1 class="font-serif leading-[1.02] tracking-tight mb-10 reveal-fade" style="font-size: clamp(2.75rem, 8vw, 7rem);">
+                            About<br>
+                        </h1>
+                        <p class="text-mist/60 font-light text-base md:text-lg leading-relaxed max-w-xl mx-auto reveal-fade">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 px-6 md:px-12 pb-10">
+                    <div class="max-w-4xl mx-auto flex items-end justify-between border-t border-mist/20 pt-6">
+                        <div class="text-[10px] tracking-[0.28em] uppercase text-mist/50">
+                            Lorem · Lorem
+                        </div>
+                        <div class="text-2xl text-mist/70">&darr;</div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ============================================================
+                 INTRO — editorial number + opening
+                 ============================================================ -->
+            <section id="about-intro" class="py-24 md:py-32 px-6 md:px-12 bg-mist relative">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+                        <div class="lg:col-span-4">
+                            <div class="lg:sticky lg:top-32">
+                                <span class="ab-section-num block mb-6 reveal-fade">Lorem</span>
+                                <div class="ab-editorial-number hidden lg:block">Ab</div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-8">
+                            <h2 class="split-text font-serif text-3xl md:text-5xl lg:text-6xl leading-[1.1] text-charcoal tracking-tight mb-10">
+                                Lorem. Ipsum. Sit. Dolor.
+                            </h2>
+                            <div class="space-y-6 text-base md:text-lg text-charcoal/70 leading-relaxed font-light max-w-2xl">
+                                <p class="split-text-p">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CHAPTERS — sticky indicator + narrative
+                 ============================================================ -->
+            <section id="about-chapters" class="py-16 md:py-24 px-6 md:px-12 bg-sand/40 relative">
+                <div class="absolute inset-0 texture-overlay opacity-30"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="ab-chapter-layout">
+
+                        <!-- Sticky vertical indicator -->
+                        <aside class="ab-chapter-indicator reveal-fade">
+                            <ul class="ab-chapter-indicator__list">
+                                <li>
+                                    <button class="ab-chapter-dot is-active" data-chapter="chapter-01">
+                                        <span class="ab-chapter-dot__mark"></span>
+                                        <span>I · Lorem</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="ab-chapter-dot" data-chapter="chapter-02">
+                                        <span class="ab-chapter-dot__mark"></span>
+                                        <span>II · Lorem</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="ab-chapter-dot" data-chapter="chapter-03">
+                                        <span class="ab-chapter-dot__mark"></span>
+                                        <span>III · Lorem</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="ab-chapter-dot" data-chapter="chapter-04">
+                                        <span class="ab-chapter-dot__mark"></span>
+                                        <span>IV · Lorem</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="ab-chapter-dot" data-chapter="chapter-05">
+                                        <span class="ab-chapter-dot__mark"></span>
+                                        <span>V · Lorem</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </aside>
+
+                        <!-- Chapters -->
+                        <div class="ab-chapters-main">
+
+                            <!-- CHAPTER I -->
+                            <div class="ab-chapter" id="chapter-01">
+                                <div class="ab-chapter__label">
+                                    <span>Chapter I</span>
+                                    <span class="ab-chapter__num">01</span>
+                                </div>
+                                <h3 class="ab-chapter__title reveal-fade">Lorem.</h3>
+                                <div class="ab-chapter__body">
+                                    <p class="reveal-fade">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                </div>
+
+                                <div class="ab-chapter-image img-reveal-container aspect-[16/9] w-full">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="The land" class="w-full h-full object-cover" loading="lazy" />
+                                </div>
+
+                                <div class="ab-pull-quote reveal-fade">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
+                                </div>
+                            </div>
+
+                            <!-- CHAPTER I -->
+                            <div class="ab-chapter" id="chapter-02">
+                                <div class="ab-chapter__label">
+                                    <span>Chapter I</span>
+                                    <span class="ab-chapter__num">01</span>
+                                </div>
+                                <h3 class="ab-chapter__title reveal-fade">Lorem.</h3>
+                                <div class="ab-chapter__body">
+                                    <p class="reveal-fade">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                </div>
+
+                                <div class="ab-chapter-image img-reveal-container aspect-[16/9] w-full">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="The land" class="w-full h-full object-cover" loading="lazy" />
+                                </div>
+
+                                <div class="ab-pull-quote reveal-fade">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
+                                </div>
+                            </div>
+
+                            <!-- CHAPTER I -->
+                            <div class="ab-chapter" id="chapter-03">
+                                <div class="ab-chapter__label">
+                                    <span>Chapter I</span>
+                                    <span class="ab-chapter__num">01</span>
+                                </div>
+                                <h3 class="ab-chapter__title reveal-fade">Lorem.</h3>
+                                <div class="ab-chapter__body">
+                                    <p class="reveal-fade">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                </div>
+
+                                <div class="ab-chapter-image img-reveal-container aspect-[16/9] w-full">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="The land" class="w-full h-full object-cover" loading="lazy" />
+                                </div>
+
+                                <div class="ab-pull-quote reveal-fade">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
+                                </div>
+                            </div>
+
+                            <!-- CHAPTER IV -->
+                            <div class="ab-chapter" id="chapter-04">
+                                <div class="ab-chapter__label">
+                                    <span>Chapter IV</span>
+                                    <span class="ab-chapter__num">04</span>
+                                </div>
+                                <h3 class="ab-chapter__title reveal-fade">The people who keep it.</h3>
+                                <div class="ab-chapter__body">
+                                    <p class="reveal-fade">
+                                        Singgah Sana is run by a small team — most of them from the village, all of them with a hand in the way the estate works. Between them, they cook, garden, weave, repair, guide, and quietly keep everything in order. They are the reason the estate feels less like a property and more like a household.
+                                    </p>
+                                </div>
+
+                                <!-- Stewards -->
+                                <!-- CHAPTER I -->
+                            <div class="ab-chapter" id="chapter-05">
+                                <div class="ab-chapter__label">
+                                    <span>Chapter I</span>
+                                    <span class="ab-chapter__num">01</span>
+                                </div>
+                                <h3 class="ab-chapter__title reveal-fade">Lorem.</h3>
+                                <div class="ab-chapter__body">
+                                    <p class="reveal-fade">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                </div>
+
+                                <div class="ab-chapter-image img-reveal-container aspect-[16/9] w-full">
+                                    <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/img_0002_compress.jpeg" alt="The land" class="w-full h-full object-cover" loading="lazy" />
+                                </div>
+
+                                <div class="ab-pull-quote reveal-fade">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
+                                </div>
+                            </div>
+
+                            <!-- CHAPTER V -->
+                            <div class="ab-chapter" id="chapter-06">
+                                <div class="ab-chapter__label">
+                                    <span>Chapter V</span>
+                                    <span class="ab-chapter__num">05</span>
+                                </div>
+                                <h3 class="ab-chapter__title reveal-fade">Lorem</h3>
+                                <div class="ab-chapter__body">
+                                    <p class="reveal-fade">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                </div>
+
+                                <div class="ab-pull-quote reveal-fade">
+                                    Lorem ipsum dolor sit amet.
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 TIMELINE — horizontal heritage
+                 ============================================================ -->
+            <section id="about-timeline" class="py-24 md:py-32 px-6 md:px-12 bg-mist relative">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="mb-12 md:mb-16 flex flex-col md:flex-row justify-between items-start gap-8 reveal-fade">
+                        <div>
+                            <span class="ab-section-num block mb-4">(02) — Lorem</span>
+                            <h2 class="split-text font-serif text-3xl md:text-5xl leading-[1.1] text-charcoal tracking-tight max-w-xl">
+                                Lorem.
+                            </h2>
+                        </div>
+                        <p class="text-charcoal/50 font-light text-sm max-w-xs md:text-right reveal-fade">
+                            Lorem.
+                        </p>
+                    </div>
+
+                    <div class="ab-timeline-wrap reveal-fade">
+                        <div class="ab-timeline">
+                            <div class="ab-timeline-item">
+                                <div class="ab-timeline-item__year">1940s</div>
+                                <div class="ab-timeline-item__dot"></div>
+                                <div class="ab-timeline-item__title">Lorem</div>
+                                <p class="ab-timeline-item__desc">
+                                    Lorem.
+                                </p>
+                            </div>
+
+                            <div class="ab-timeline-item">
+                                <div class="ab-timeline-item__year">1970s</div>
+                                <div class="ab-timeline-item__dot"></div>
+                                <div class="ab-timeline-item__title">Lorem</div>
+                                <p class="ab-timeline-item__desc">
+                                    Lorem.
+                                </p>
+                            </div>
+
+                            <div class="ab-timeline-item">
+                                <div class="ab-timeline-item__year">2019</div>
+                                <div class="ab-timeline-item__dot"></div>
+                                <div class="ab-timeline-item__title">Lorem</div>
+                                <p class="ab-timeline-item__desc">
+                                    Lorem.
+                                </p>
+                            </div>
+
+                            <div class="ab-timeline-item">
+                                <div class="ab-timeline-item__year">2021</div>
+                                <div class="ab-timeline-item__dot"></div>
+                                <div class="ab-timeline-item__title">Lorem</div>
+                                <p class="ab-timeline-item__desc">
+                                    Lorem.
+                                </p>
+                            </div>
+
+                            <div class="ab-timeline-item">
+                                <div class="ab-timeline-item__year">2024</div>
+                                <div class="ab-timeline-item__dot"></div>
+                                <div class="ab-timeline-item__title">Lorem</div>
+                                <p class="ab-timeline-item__desc">
+                                    Lorem.
+                                </p>
+                            </div>
+
+                            <div class="ab-timeline-item">
+                                <div class="ab-timeline-item__year">2026</div>
+                                <div class="ab-timeline-item__dot"></div>
+                                <div class="ab-timeline-item__title">Lorem</div>
+                                <p class="ab-timeline-item__desc">
+                                    Lorem.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 VALUES — grid editorial
+                 ============================================================ -->
+            <section id="about-values" class="py-24 md:py-32 px-6 md:px-12 bg-charcoal text-mist relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-20"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-start gap-8 reveal-fade">
+                        <div>
+                            <span class="text-[10px] tracking-[0.3em] uppercase text-seafoam font-medium mb-6 block">
+                                (03) — Lorem
+                            </span>
+                            <h2 class="split-text font-serif text-3xl md:text-5xl lg:text-6xl leading-[1.1] text-mist tracking-tight max-w-2xl">
+                                Lorem.
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="ab-values" style="border-top-color: rgba(243, 241, 236, 0.2);">
+                        <div class="ab-value reveal-fade" style="border-bottom-color: rgba(243, 241, 236, 0.15);">
+                            <div class="ab-value__num" style="color: rgba(149, 201, 185, 0.6);">01</div>
+                            <div class="ab-value__title" style="color: #f3f1ec;">Lorem</div>
+                            <p class="ab-value__desc" style="color: rgba(243, 241, 236, 0.65);">
+                                Lorem.
+                            </p>
+                        </div>
+
+                        <div class="ab-value reveal-fade" style="border-bottom-color: rgba(243, 241, 236, 0.15);">
+                            <div class="ab-value__num" style="color: rgba(149, 201, 185, 0.6);">02</div>
+                            <div class="ab-value__title" style="color: #f3f1ec;">Lorem</div>
+                            <p class="ab-value__desc" style="color: rgba(243, 241, 236, 0.65);">
+                                Lorem.
+                            </p>
+                        </div>
+
+                        <div class="ab-value reveal-fade" style="border-bottom-color: rgba(243, 241, 236, 0.15);">
+                            <div class="ab-value__num" style="color: rgba(149, 201, 185, 0.6);">03</div>
+                            <div class="ab-value__title" style="color: #f3f1ec;">Lorem</div>
+                            <p class="ab-value__desc" style="color: rgba(243, 241, 236, 0.65);">
+                                Lorem
+                            </p>
+                        </div>
+
+                        <div class="ab-value reveal-fade" style="border-bottom-color: rgba(243, 241, 236, 0.15);">
+                            <div class="ab-value__num" style="color: rgba(149, 201, 185, 0.6);">04</div>
+                            <div class="ab-value__title" style="color: #f3f1ec;">Lorem</div>
+                            <p class="ab-value__desc" style="color: rgba(243, 241, 236, 0.65);">
+                                Lorem
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 QUOTE — closing statement
+                 ============================================================ -->
+            <section id="about-quote" class="py-24 md:py-32 px-6 md:px-12 bg-sand/40 relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-30"></div>
+                <div class="max-w-5xl mx-auto relative z-10 text-center">
+                    <div class="ab-eyebrow text-moss justify-center mb-10 reveal-fade" style="justify-content: center;">
+                        Lorem
+                    </div>
+                    <blockquote class="ab-quote-dark reveal-fade" style="color: #2d2a26;">
+                        Lorem
+                    </blockquote>
+                    <div class="text-[10px] tracking-[0.3em] uppercase text-charcoal/50 mt-10 reveal-fade">
+                        Lorem
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CTA — closing
+                 ============================================================ -->
+            <section id="about-cta" class="py-24 md:py-32 px-6 md:px-12 bg-mist relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-5xl mx-auto relative z-10 text-center">
+                    <span class="text-[10px] tracking-[0.3em] uppercase text-moss font-medium mb-8 block reveal-fade">
+                        Lorem
+                    </span>
+                    <h2 class="split-text font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] text-charcoal tracking-tight mb-10">
+                        Lorem <em class="text-moss">ipsum</em>.
+                    </h2>
+                    <p class="text-charcoal/60 font-light text-base md:text-lg max-w-xl mx-auto mb-12 reveal-fade">
+                        Lorem
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 reveal-fade">
+                        <a href="private-estate.html" class="inline-block bg-charcoal text-mist px-10 py-4 text-[10px] tracking-[0.28em] uppercase font-medium hover:bg-moss transition-all duration-500">
+                            Lorem
+                        </a>
+                        <a href="contact.html" class="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-charcoal border-b border-charcoal/40 pb-1 hover:gap-5 hover:border-moss hover:text-moss transition-all duration-500">
+                            Lorem
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+             <footer id="availability" class="bg-moss text-mist pt-24 pb-12 px-6 md:px-12 relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div id="enquire" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-24 border-b border-mist/20 pb-24">
+                        <div>
+                            <span class="text-[10px] tracking-[0.2em] uppercase text-seafoam mb-8 block reveal-fade">Enquire</span>
+                            <h2 class="font-serif text-5xl md:text-6xl mb-8 leading-[1.1] text-mist tracking-tight split-text">
+                                Begin your <em class="text-seafoam">stay</em>.
+                            </h2>
+                            <p class="text-mist/70 font-light text-base md:text-lg max-w-md mb-10 reveal-fade">
+                                The entire estate can be yours. Enquire about availability, rates, and bespoke experiences.
+                            </p>
+                            <a href="contact.html" class="reveal-fade inline-block border border-mist px-8 py-4 text-xs tracking-[0.2em] uppercase hover:bg-mist hover:text-moss transition-all duration-300">
+                                Contact Us
+                            </a>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 lg:justify-end mt-8 lg:mt-16">
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Discover</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="about.html" class="footer-link">About</a></li>
+                                    <li><a href="blog.html" class="footer-link">Blog</a></li>
+                                    <li><a href="faq.html" class="footer-link">FAQ</a></li>
+                                    <li><a href="policy.html" class="footer-link">Policy</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Contact</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="#" class="footer-link">hello@singgah-sana.com</a></li>
+                                    <li><a href="#" class="footer-link">+60 00000000</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Location</h4>
+                                <address class="not-italic font-light text-mist/80 text-base leading-relaxed">
+                                    No.3 Lorong Cheringin<br>
+                                    Kampung Janda Baik<br>
+                                    28750 Bentong, Pahang<br>
+                                    Malaysia
+                                </address>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-center text-[10px] text-mist/50 uppercase tracking-[0.2em] font-medium reveal-fade">
+                        <p class="mb-4 md:mb-0">&copy; 2026 Singgah Sana. All rights reserved.</p>
+                        <div class="flex flex-wrap gap-6 justify-center">
+                            <a href="#" class="hover:text-mist transition-colors">Instagram</a>
+                            <a href="#" class="hover:text-mist transition-colors">Facebook</a>
+                            <a href="#" class="hover:text-mist transition-colors">TripAdvisor</a>
+                            <a href="#" class="hover:text-mist transition-colors">TikTok</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- LIVE CHAT -->
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-header">
+            <div>
+                <div class="chat-header-title">Live Chat Singgah Sana</div>
+                <div class="chat-header-status">Online · Replies within minutes</div>
+            </div>
+            <button id="chatClose" class="chat-close" aria-label="Close chat">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="chatBody" class="chat-body"></div>
+
+        <div class="chat-input-wrap">
+            <div class="chat-input-row">
+                <textarea id="chatInput" class="chat-input" rows="1" placeholder="Write a message..."></textarea>
+                <button id="chatSend" class="chat-send" aria-label="Send">
+                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            Lorem ipsum
+        </div>
+    </div>
+
+    <button id="chatButton" class="chat-button" aria-label="Open chat">
+        <svg viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+        </svg>
+        <span>Live Chat</span>
+    </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            gsap.config({ force3D: true });
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+            gsap.ticker.lagSmoothing(0); 
+
+            document.body.style.overflow = "hidden";
+
+            // Loader
+            const tlLoader = gsap.timeline({
+                onComplete: () => {
+                    document.body.style.overflow = ""; 
+                }
+            });
+
+            tlLoader
+                .to("#loader-logo", { opacity: 1, scale: 1.5, duration: 2, ease: "power3.out" })
+                .to("#loader-logo", { opacity: 0, y: -30, duration: 1, ease: "power2.inOut" }, "+=0.5")
+                .to("#loader", { yPercent: -100, duration: 1, ease: "power3.inOut" });
+
+            // Navbar
+            let lastScroll = 0;
+            const navbar = document.getElementById('navbar');
+            
+            lenis.on('scroll', (e) => {
+                const currentScroll = e.animatedScroll;
+                if (!document.getElementById('menuOverlay').classList.contains('clip-menu-visible')) {
+                    if (currentScroll > 50) {
+                        navbar.classList.replace('bg-transparent', 'bg-charcoal');
+                        if (currentScroll > lastScroll) {
+                            navbar.classList.remove('nav-visible');
+                            navbar.classList.add('nav-hidden');
+                        } else {
+                            navbar.classList.remove('nav-hidden');
+                            navbar.classList.add('nav-visible');
+                        }
+                    } else {
+                        navbar.classList.replace('bg-charcoal', 'bg-transparent');
+                        navbar.classList.remove('nav-hidden');
+                        navbar.classList.add('nav-visible');
+                    }
+                }
+                lastScroll = currentScroll;
+            });
+
+            // Menu
+            const menuBtn = document.getElementById('menuBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            function toggleMenu() {
+                menuOverlay.classList.toggle('clip-menu-visible');
+                menuOverlay.classList.toggle('clip-menu-hidden');
+                
+                if(menuOverlay.classList.contains('clip-menu-visible')) {
+                    lenis.stop();
+                } else {
+                    lenis.start();
+                }
+            }
+
+            menuBtn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuOverlay.classList.remove('clip-menu-visible');
+                    menuOverlay.classList.add('clip-menu-hidden');
+                    lenis.start();
+                });
+            });
+
+            // Typography Reveals
+            const splitHeadings = new SplitType('.split-text', { types: 'lines' });
+            const splitParagraphs = new SplitType('.split-text-p', { types: 'lines' });
+            
+            const wrapLines = (splitInstance) => {
+                splitInstance.lines.forEach(line => {
+                    if (!line.parentElement.classList.contains('line-wrapper')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('line-wrapper');
+                        line.parentNode.insertBefore(wrapper, line);
+                        wrapper.appendChild(line);
+                        gsap.set(line, { yPercent: 120, rotationZ: 2, opacity: 0 });
+                    }
+                });
+            };
+
+            wrapLines(splitHeadings);
+            wrapLines(splitParagraphs);
+
+            ScrollTrigger.batch(splitHeadings.elements, {
+                start: "top 85%",
+                onEnter: batch => {
+                    batch.forEach(el => {
+                        gsap.to(el.querySelectorAll('.line'), {
+                            yPercent: 0, rotationZ: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: "power3.out"
+                        });
+                    });
+                }
+            });
+
+            ScrollTrigger.batch(splitParagraphs.elements, {
+                start: "top 85%",
+                onEnter: batch => {
+                    batch.forEach(el => {
+                        gsap.to(el.querySelectorAll('.line'), {
+                            yPercent: 0, rotationZ: 0, opacity: 1, duration: 1, stagger: 0.05, ease: "power2.out"
+                        });
+                    });
+                }
+            });
+
+            // Image Reveal
+            const revealContainers = document.querySelectorAll('.img-reveal-container');
+            revealContainers.forEach(container => {
+                const img = container.querySelector('img');
+                
+                gsap.set(img, { scale: 1.25 });
+                gsap.set(container, { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" });
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top 85%",
+                    }
+                });
+
+                tl.to(container, {
+                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+                    duration: 1.5,
+                    ease: "power3.inOut"
+                })
+                .to(img, {
+                    scale: 1,
+                    duration: 1.8,
+                    ease: "power2.out"
+                }, "-=1.2"); 
+            });
+
+            // Fade in
+            ScrollTrigger.batch('.reveal-fade', {
+                start: "top 92%",
+                onEnter: batch => {
+                    gsap.fromTo(batch, 
+                        { y: 24, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: "power2.out", overwrite: true }
+                    );
+                }
+            });
+
+            // ============================================================
+            // CHAPTER INDICATOR — scroll to chapter
+            // ============================================================
+            const chapterDots = document.querySelectorAll('.ab-chapter-dot');
+
+            function setActiveChapter(targetId) {
+                chapterDots.forEach(d => d.classList.remove('is-active'));
+                const active = document.querySelector(`.ab-chapter-dot[data-chapter="${targetId}"]`);
+                if (active) active.classList.add('is-active');
+            }
+
+            chapterDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const targetId = dot.getAttribute('data-chapter');
+                    const targetEl = document.getElementById(targetId);
+                    setActiveChapter(targetId);
+                    if (targetEl) {
+                        lenis.scrollTo(targetEl, { offset: -100, duration: 1.4 });
+                    }
+                });
+            });
+
+            // Update active chapter on scroll (via ScrollTrigger)
+            document.querySelectorAll('.ab-chapter').forEach(chapter => {
+                ScrollTrigger.create({
+                    trigger: chapter,
+                    start: "top 40%",
+                    end: "bottom 40%",
+                    onEnter: () => setActiveChapter(chapter.id),
+                    onEnterBack: () => setActiveChapter(chapter.id)
+                });
+            });
+
+            // ============================================================
+            // TIMELINE — horizontal drag scroll via wheel (desktop)
+            // ============================================================
+            const timelineWrap = document.querySelector('.ab-timeline-wrap');
+            if (timelineWrap) {
+                timelineWrap.addEventListener('wheel', (e) => {
+                    // only intercept horizontal intent
+                    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+                    // translate vertical wheel to horizontal scroll when hovering timeline
+                    // (only if user is scrolling while cursor inside — optional, keep simple)
+                }, { passive: true });
+            }
+
+            // Resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    splitHeadings.revert();
+                    splitParagraphs.revert();
+                    splitHeadings.split();
+                    splitParagraphs.split();
+                    wrapLines(splitHeadings);
+                    wrapLines(splitParagraphs);
+                    ScrollTrigger.refresh();
+                }, 200);
+            });
+
+            // ============================================================
+            // LIVE CHAT — Concierge
+            // ============================================================
+            const chatPanel = document.getElementById('chatPanel');
+            const chatButton = document.getElementById('chatButton');
+            const chatClose = document.getElementById('chatClose');
+            const chatBody = document.getElementById('chatBody');
+            const chatInput = document.getElementById('chatInput');
+            const chatSend = document.getElementById('chatSend');
+
+            let chatOpen = false;
+            let isTyping = false;
+            const CHAT_STORAGE_KEY = 'singgahChatHistory_v1';
+
+            let chatHistory = [];
+            try {
+                chatHistory = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+            } catch (e) {
+                chatHistory = [];
+            }
+
+            function getTimeString() {
+                const now = new Date();
+                return now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const initialBotMessages = [
+                {
+                    type: 'bot',
+                    text: 'Welcome to Singgah Sana. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    time: getTimeString()
+                },
+                {
+                    type: 'bot',
+                    text: 'How may I assist you today?',
+                    time: getTimeString(),
+                    quickReplies: ['Lorem', 'Lorem', 'Lorem', 'Lorem']
+                }
+            ];
+
+            function getBotReply(userText) {
+                const lower = userText.toLowerCase().trim();
+
+                if (/^(hi|hello|hey|good morning|good afternoon|good evening|greetings|selamat|hai)/.test(lower)) {
+                    return {
+                        text: 'Hello, lorem ipsum dolor sit amet consectetur adipiscing elit sed do?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(book|reserve|reservation|stay|room|pavilion|accommodation|available|availability|check.?in|check.?out)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(rate|price|cost|how much|pricing|fee|expensive|cheap|budget)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Cancellation policy']
+                    };
+                }
+
+                if (/(cancel|cancellation|refund|policy|deposit|penalty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See full policy', 'Ask another question']
+                    };
+                }
+
+                if (/(where|location|address|directions|how to get|far|distance|near|map|janda baik|bentong|pahang|kl|kuala lumpur)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Open in Maps', 'Airport transfer', 'Ask another question']
+                    };
+                }
+
+                if (/(activit|experience|things to do|do there|what can i do|yoga|fishing|hike|hiking|picnic|walk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See experiences', 'Book a stay']
+                    };
+                }
+
+                if (/(event|wedding|marriage|engagement|private dinner|meeting|conference|workshop|corporate|celebrat)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See events', 'Send an enquiry']
+                    };
+                }
+
+                if (/(child|children|kid|family|baby|infant|toddler)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(pet|dog|cat|animal)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(amenit|facilit|provide|include|wifi|wi-fi|air.?con|ac|towel|robe|toiletr|bedding|net|safe|incense|desk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(food|dining|dinner|lunch|breakfast|chef|meal|eat|menu|vegetarian|vegan|halal|allerg)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Book a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(accessib|wheelchair|mobility|disabled|elderly|walking difficulty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(airport|transfer|pickup|pick up|taxi|grab|transport|driver)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(wi.?fi|internet|connection|online)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Ask another question']
+                    };
+                }
+
+                if (/(thank|thanks|appreciat|grateful)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Goodbye']
+                    };
+                }
+
+                if (/(bye|goodbye|see you|farewell|that.s all|nothing else)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                    };
+                }
+
+                if (/(see room|see rooms|show rooms|open rooms)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'room.html'
+                    };
+                }
+
+                if (/(see experience|show experience|open experience|see experiences)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'experience.html'
+                    };
+                }
+
+                if (/(see event|show event|open event|see events|send.*enquir)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'events.html'
+                    };
+                }
+
+                if (/(see.*polic|open.*polic)/.test(lower)) {
+                    return {
+                        text: 'Opening our policy page for you now.',
+                        redirect: 'policy.html'
+                    };
+                }
+
+                if (/(map|open.*map|direction)/.test(lower)) {
+                    return {
+                        text: 'Opening our location in Maps for you now.',
+                        redirect: 'https://maps.app.goo.gl/U5hAkqrDFPQwzhny7'
+                    };
+                }
+
+                if (/(book a stay|booking a stay|reserve|make.*book)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        redirect: 'room.html'
+                    };
+                }
+
+                return {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                    quickReplies: ['Booking a stay', 'Things to do', 'Getting here']
+                };
+            }
+
+            function renderChat() {
+                if (chatHistory.length === 0) {
+                    chatHistory = [...initialBotMessages];
+                    saveChat();
+                }
+
+                chatBody.innerHTML = '';
+
+                chatHistory.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = `chat-msg chat-msg--${msg.type}`;
+
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-msg__bubble';
+                    bubble.textContent = msg.text;
+                    div.appendChild(bubble);
+
+                    if (msg.quickReplies && msg.quickReplies.length > 0) {
+                        const quick = document.createElement('div');
+                        quick.className = 'chat-quick';
+                        msg.quickReplies.forEach(reply => {
+                            const btn = document.createElement('button');
+                            btn.textContent = reply;
+                            btn.addEventListener('click', () => handleQuickReply(reply));
+                            quick.appendChild(btn);
+                        });
+                        div.appendChild(quick);
+                    }
+
+                    const time = document.createElement('div');
+                    time.className = 'chat-msg__time';
+                    time.textContent = msg.time || '';
+                    div.appendChild(time);
+
+                    chatBody.appendChild(div);
+                });
+
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function saveChat() {
+                try {
+                    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+                } catch (e) {}
+            }
+
+            function addMessage(msg) {
+                chatHistory.push(msg);
+                saveChat();
+                renderChat();
+            }
+
+            function showTyping() {
+                const typing = document.createElement('div');
+                typing.className = 'chat-typing';
+                typing.id = 'chatTyping';
+                typing.innerHTML = '<span></span><span></span><span></span>';
+                chatBody.appendChild(typing);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+            function hideTyping() {
+                const t = document.getElementById('chatTyping');
+                if (t) t.remove();
+            }
+
+            function handleQuickReply(reply) {
+                addMessage({
+                    type: 'user',
+                    text: reply,
+                    time: getTimeString()
+                });
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(reply);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 500);
+            }
+
+            function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text || isTyping) return;
+
+                addMessage({
+                    type: 'user',
+                    text: text,
+                    time: getTimeString()
+                });
+
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(text);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 600);
+            }
+
+            function openChat() {
+                chatOpen = true;
+                chatPanel.classList.add('is-open');
+                chatButton.classList.add('is-hidden');
+                setTimeout(() => chatInput.focus(), 400);
+            }
+
+            function closeChat() {
+                chatOpen = false;
+                chatPanel.classList.remove('is-open');
+                chatButton.classList.remove('is-hidden');
+            }
+
+            chatButton.addEventListener('click', openChat);
+            chatClose.addEventListener('click', closeChat);
+            chatSend.addEventListener('click', sendMessage);
+
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            chatInput.addEventListener('input', () => {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
+            });
+
+            const hasAutoOpened = sessionStorage.getItem('singgahChatAutoOpened');
+            if (!hasAutoOpened && window.innerWidth > 1024) {
+                setTimeout(() => {
+                    if (!chatOpen) {
+                        openChat();
+                        sessionStorage.setItem('singgahChatAutoOpened', '1');
+                    }
+                }, 12000);
+            }
+
+            renderChat();
+        });
+    </script>
+</body>
+</html>

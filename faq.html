@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | Singgah Sana</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mist': '#f3f1ec',
+                        'seafoam': '#95c9b9',
+                        'moss': '#4f5c4e',
+                        'charcoal': '#2d2a26',
+                        'sand': '#e8e2d5',
+                        'clay': '#c9a88a',
+                        'ink': '#1a1815',
+                        'paper': '#faf8f4',
+                    },
+                    fontFamily: {
+                        serif: ['Marcellus', 'serif'],
+                        sans: ['"Work Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f3f1ec;
+            color: #2d2a26;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+        .line-wrapper {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: top;
+            padding-bottom: 0.1em;
+        }
+        
+        .img-reveal-container {
+            overflow: hidden;
+            position: relative;
+            transform: translateZ(0);
+            background-color: rgba(45, 42, 38, 0.1);
+        }
+
+        ::selection { background-color: #4f5c4e; color: #f3f1ec; }
+        
+        .nav-hidden { transform: translate3d(0, -100%, 0); }
+        .nav-visible { transform: translate3d(0, 0, 0); }
+
+        .clip-menu-hidden { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+        .clip-menu-visible { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+        .texture-overlay {
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           FOOTER LINKS
+           ============================================================ */
+        .footer-link {
+            display: inline-block;
+            font-size: 0.95rem;
+            color: rgba(243, 241, 236, 0.75);
+            transition: color 0.4s, padding-left 0.4s;
+            position: relative;
+        }
+        .footer-link:hover {
+            color: #f3f1ec;
+            padding-left: 8px;
+        }
+        .footer-link::before {
+            content: '·';
+            position: absolute;
+            left: -4px;
+            opacity: 0;
+            transition: opacity 0.4s, left 0.4s;
+            color: #95c9b9;
+        }
+        .footer-link:hover::before {
+            opacity: 1;
+            left: -8px;
+        }
+
+        /* ============================================================
+           LIVE CHAT — posisi KIRI bawah
+           ============================================================ */
+        .chat-button {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 60;
+            height: 52px;
+            padding: 0 20px 0 16px;
+            border-radius: 999px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(45, 42, 38, 0.28);
+            transition: background 0.4s, transform 0.4s, box-shadow 0.4s, opacity 0.4s;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+        }
+        .chat-button:hover {
+            background: #2d2a26;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(45, 42, 38, 0.35);
+        }
+        .chat-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 1.75;
+            fill: none;
+        }
+        .chat-button::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 999px;
+            border: 1px solid #95c9b9;
+            opacity: 0;
+            animation: chatPulse 3.4s ease-out infinite;
+            pointer-events: none;
+        }
+        @keyframes chatPulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 0; transform: scale(1.15); }
+        }
+        .chat-button.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 92px;
+            left: 24px;
+            z-index: 61;
+            width: 400px;
+            max-width: calc(100vw - 48px);
+            height: 600px;
+            max-height: calc(100vh - 140px);
+            background: #f3f1ec;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 60px rgba(45, 42, 38, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.98);
+            transform-origin: bottom left;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0.4s,
+                        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .chat-panel.is-open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .chat-header {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            padding: 20px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-header-title {
+            font-family: 'Marcellus', serif;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+        }
+        .chat-header-status {
+            font-size: 9.5px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            font-family: 'Work Sans', sans-serif;
+        }
+        .chat-header-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #95c9b9;
+            animation: chatStatusPulse 2s ease-in-out infinite;
+        }
+        @keyframes chatStatusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: #f3f1ec;
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.75;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .chat-close:hover { opacity: 1; }
+        .chat-close svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #f3f1ec;
+            scroll-behavior: smooth;
+        }
+        .chat-body::-webkit-scrollbar { width: 4px; }
+        .chat-body::-webkit-scrollbar-thumb {
+            background: rgba(79, 92, 78, 0.25);
+            border-radius: 2px;
+        }
+
+        .chat-msg {
+            max-width: 86%;
+            font-size: 13.5px;
+            line-height: 1.55;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        @keyframes msgIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-msg--bot { align-self: flex-start; }
+        .chat-msg--user { align-self: flex-end; }
+        .chat-msg__bubble {
+            padding: 12px 16px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 300;
+            border-radius: 2px;
+        }
+        .chat-msg--bot .chat-msg__bubble {
+            background: #ffffff;
+            color: #2d2a26;
+            border-left: 2px solid #4f5c4e;
+        }
+        .chat-msg--user .chat-msg__bubble {
+            background: #4f5c4e;
+            color: #f3f1ec;
+        }
+        .chat-msg__time {
+            font-size: 9px;
+            color: rgba(45, 42, 38, 0.4);
+            margin-top: 5px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        .chat-msg--user .chat-msg__time { text-align: right; }
+
+        .chat-typing {
+            align-self: flex-start;
+            max-width: 86%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-left: 2px solid #4f5c4e;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            opacity: 0;
+            animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .chat-typing span {
+            width: 6px;
+            height: 6px;
+            background: #4f5c4e;
+            border-radius: 50%;
+            opacity: 0.35;
+            animation: typingBounce 1.2s ease-in-out infinite;
+        }
+        .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-quick {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .chat-quick button {
+            background: transparent;
+            border: 1px solid rgba(79, 92, 78, 0.3);
+            color: #4f5c4e;
+            padding: 7px 13px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            border-radius: 2px;
+        }
+        .chat-quick button:hover {
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border-color: #4f5c4e;
+        }
+
+        .chat-input-wrap {
+            border-top: 1px solid rgba(79, 92, 78, 0.15);
+            padding: 14px 18px;
+            background: #f3f1ec;
+            flex-shrink: 0;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13.5px;
+            color: #2d2a26;
+            padding: 8px 0;
+            resize: none;
+            outline: none;
+            max-height: 80px;
+            line-height: 1.5;
+        }
+        .chat-input::placeholder { color: rgba(45, 42, 38, 0.4); }
+        .chat-send {
+            width: 38px;
+            height: 38px;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.3s;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+        .chat-send:hover {
+            background: #2d2a26;
+            transform: translateY(-1px);
+        }
+        .chat-send svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        .chat-send:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .chat-footer {
+            text-align: center;
+            padding: 10px 20px 14px;
+            font-size: 9.5px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.5);
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .chat-panel {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                bottom: 0;
+                right: 0;
+                top: 0;
+                left: 0;
+            }
+            .chat-button {
+                bottom: 20px;
+                left: 20px;
+                height: 48px;
+                padding: 0 16px 0 14px;
+                font-size: 10px;
+            }
+            .chat-panel.is-open ~ .chat-button {
+                display: none;
+            }
+        }
+
+        /* ============================================================
+           FAQ PAGE — UI/UX KHUSUS
+           ============================================================ */
+
+        /* Hero — typographic, no image */
+        .faq-hero-rule {
+            width: 1px;
+            height: 80px;
+            background: rgba(243, 241, 236, 0.3);
+            margin: 0 auto;
+        }
+
+        /* Search bar */
+        .faq-search-wrap {
+            position: relative;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .faq-search {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(243, 241, 236, 0.35);
+            padding: 1rem 2.5rem 1rem 0;
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: #f3f1ec;
+            letter-spacing: -0.005em;
+            outline: none;
+            transition: border-color 0.4s;
+        }
+        .faq-search::placeholder {
+            color: rgba(243, 241, 236, 0.35);
+            font-style: italic;
+        }
+        .faq-search:focus {
+            border-bottom-color: #95c9b9;
+        }
+        .faq-search-icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .faq-search-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: #f3f1ec;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        /* FAQ layout — sticky category nav + accordion */
+        .faq-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+        @media (min-width: 1024px) {
+            .faq-layout {
+                grid-template-columns: 260px 1fr;
+                gap: 5rem;
+            }
+        }
+
+        .faq-nav {
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .faq-nav {
+                position: sticky;
+                top: 120px;
+                align-self: start;
+            }
+        }
+
+        .faq-nav__title {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(79, 92, 78, 0.6);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(79, 92, 78, 0.2);
+        }
+
+        .faq-nav__list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        @media (min-width: 1024px) {
+            .faq-nav__list {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                gap: 0;
+            }
+        }
+
+        .faq-nav__link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(45, 42, 38, 0.55);
+            text-decoration: none;
+            transition: color 0.4s, padding-left 0.4s, background 0.4s;
+            border-radius: 2px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            text-align: left;
+            width: 100%;
+        }
+        @media (min-width: 1024px) {
+            .faq-nav__link {
+                border-radius: 0;
+                border-left: 2px solid transparent;
+                padding-left: 1rem;
+            }
+        }
+        .faq-nav__link:hover {
+            color: #2d2a26;
+        }
+        @media (min-width: 1024px) {
+            .faq-nav__link:hover {
+                padding-left: 1.5rem;
+            }
+        }
+        .faq-nav__link.is-active {
+            color: #4f5c4e;
+            background: rgba(79, 92, 78, 0.08);
+        }
+        @media (min-width: 1024px) {
+            .faq-nav__link.is-active {
+                border-left-color: #4f5c4e;
+                padding-left: 1.5rem;
+                background: transparent;
+            }
+        }
+        .faq-nav__count {
+            font-size: 9px;
+            opacity: 0.5;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.1em;
+        }
+
+        /* Category blocks */
+        .faq-category {
+            margin-bottom: 4rem;
+        }
+        .faq-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .faq-category__header {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(79, 92, 78, 0.2);
+        }
+        .faq-category__num {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.35em;
+            color: rgba(79, 92, 78, 0.5);
+        }
+        .faq-category__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            color: #2d2a26;
+        }
+
+        /* Accordion — quiet, minimal */
+        .faq-item {
+            border-bottom: 1px solid rgba(45, 42, 38, 0.1);
+        }
+        .faq-item__trigger {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 40px 1fr 32px;
+            gap: 1rem;
+            align-items: start;
+            padding: 1.75rem 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            transition: padding-left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .faq-item__trigger:hover {
+            padding-left: 0.5rem;
+        }
+        .faq-item__q-num {
+            font-family: 'Marcellus', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.28em;
+            color: rgba(79, 92, 78, 0.5);
+            padding-top: 0.35rem;
+            transition: color 0.4s;
+        }
+        .faq-item__q {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+            line-height: 1.35;
+            letter-spacing: -0.005em;
+            color: #2d2a26;
+            transition: color 0.4s;
+        }
+        .faq-item__trigger:hover .faq-item__q {
+            color: #4f5c4e;
+        }
+        .faq-item.is-open .faq-item__q {
+            color: #4f5c4e;
+        }
+        .faq-item.is-open .faq-item__q-num {
+            color: #4f5c4e;
+        }
+
+        .faq-item__icon {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            margin-top: 0.5rem;
+            justify-self: end;
+            flex-shrink: 0;
+        }
+        .faq-item__icon::before,
+        .faq-item__icon::after {
+            content: '';
+            position: absolute;
+            background: #4f5c4e;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .faq-item__icon::before {
+            left: 50%; top: 0;
+            width: 1px; height: 100%;
+            transform: translateX(-50%);
+        }
+        .faq-item__icon::after {
+            top: 50%; left: 0;
+            width: 100%; height: 1px;
+            transform: translateY(-50%);
+        }
+        .faq-item.is-open .faq-item__icon::before {
+            transform: translateX(-50%) rotate(90deg);
+            opacity: 0;
+        }
+
+        .faq-item__content {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .faq-item__content-inner {
+            padding: 0 0 2rem 3.5rem;
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 1.75;
+            color: rgba(45, 42, 38, 0.68);
+            max-width: 44rem;
+        }
+        @media (max-width: 640px) {
+            .faq-item__trigger {
+                grid-template-columns: 32px 1fr 24px;
+                gap: 0.75rem;
+            }
+            .faq-item__content-inner {
+                padding-left: 2.5rem;
+            }
+        }
+
+        /* Empty state */
+        .faq-empty {
+            text-align: center;
+            padding: 4rem 1rem;
+            display: none;
+        }
+        .faq-empty.is-visible {
+            display: block;
+        }
+
+        /* Contact card — horizontal */
+        .faq-contact-card {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 3rem 2rem;
+            background: #4f5c4e;
+            color: #f3f1ec;
+            position: relative;
+            overflow: hidden;
+        }
+        @media (min-width: 1024px) {
+            .faq-contact-card {
+                grid-template-columns: 1.2fr 1fr;
+                gap: 4rem;
+                padding: 4rem 3rem;
+            }
+        }
+        .faq-contact-card__label {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #95c9b9;
+            margin-bottom: 1.25rem;
+            display: block;
+        }
+        .faq-contact-card__title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.75rem, 3vw, 2.75rem);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.25rem;
+        }
+        .faq-contact-card__desc {
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 1.65;
+            color: rgba(243, 241, 236, 0.75);
+            max-width: 32rem;
+        }
+        .faq-contact-card__actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .faq-contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid rgba(243, 241, 236, 0.25);
+            color: #f3f1ec;
+            text-decoration: none;
+            transition: background 0.4s, border-color 0.4s, gap 0.4s;
+            font-size: 11px;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .faq-contact-link:hover {
+            background: rgba(243, 241, 236, 0.08);
+            border-color: #95c9b9;
+        }
+        .faq-contact-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+            flex-shrink: 0;
+            transition: transform 0.4s;
+        }
+        .faq-contact-link:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Editorial number hero */
+        .faq-editorial-number {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(8rem, 22vw, 20rem);
+            line-height: 0.82;
+            letter-spacing: -0.05em;
+            color: rgba(243, 241, 236, 0.06);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Eyebrow */
+        .faq-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+        .faq-eyebrow::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        /* Highlight search match */
+        .faq-mark {
+            background: rgba(149, 201, 185, 0.35);
+            color: #2d2a26;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* Divider with symbol */
+        .faq-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 3rem 0;
+            color: rgba(79, 92, 78, 0.4);
+        }
+        .faq-divider__line {
+            flex: 1;
+            height: 1px;
+            background: rgba(79, 92, 78, 0.15);
+            max-width: 120px;
+        }
+        .faq-divider__symbol {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
+        }
+    </style>
+</head>
+<body class="font-sans font-light bg-mist">
+
+    <div id="loader" class="fixed inset-0 z-[100] bg-charcoal flex items-center justify-center text-mist flex-col pointer-events-none">
+        <img id="loader-logo"
+             src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white2.png"
+             alt="Singgah Sana"
+             class="h-28 md:h-48 lg:h-56 w-auto opacity-0 transform scale-110">
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-40 bg-transparent px-6 md:px-12 pt-6 pb-4 transition-transform duration-500 nav-visible">
+        <div class="flex justify-between items-center text-xs md:text-sm tracking-wide text-mist drop-shadow-md">
+            <div class="hidden md:block w-1/3 text-left uppercase tracking-widest text-[10px] md:text-xs font-medium opacity-90">
+                Traditional Malay private estate
+            </div>
+            <div class="w-1/2 md:w-1/3 text-left md:text-center font-serif text-xl md:text-2xl font-bold uppercase tracking-widest">
+                <img src="https://raw.githubusercontent.com/untitledpisces/i-ma-ge/refs/heads/main/img1/logo-singgahsana-white.png" alt="Singgah Sana" class="h-8 md:h-20 w-auto inline-block" />
+            </div>
+            <div class="w-1/2 md:w-1/3 text-right flex justify-end">
+                <button id="menuBtn" class="flex items-center gap-2 hover:text-moss transition-colors duration-300 uppercase tracking-widest text-xs font-medium">
+                    <span>Menu</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="fixed inset-0 bg-charcoal text-mist z-50 flex flex-col justify-center items-center clip-menu-hidden transition-all duration-700">
+        <button id="closeBtn" class="absolute top-8 right-6 md:right-12 text-xs uppercase tracking-widest hover:text-seafoam transition-colors flex items-center gap-2">
+            <span>Close</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex flex-col space-y-5 md:space-y-7 text-center font-serif text-3xl md:text-5xl">
+            <a href="index.html" class="menu-link hover:text-seafoam transition-colors duration-300">Home</a>
+            <a href="private-estate.html" class="menu-link hover:text-seafoam transition-colors duration-300">Private Estate</a>
+            <a href="experience.html" class="menu-link hover:text-seafoam transition-colors duration-300">Experience</a>
+            <a href="events.html" class="menu-link hover:text-seafoam transition-colors duration-300">Events</a>
+            <a href="gallery.html" class="menu-link hover:text-seafoam transition-colors duration-300">Gallery</a>
+            <a href="faq.html" class="menu-link hover:text-seafoam transition-colors duration-300">FAQ</a>
+            <a href="contact.html" class="menu-link hover:text-seafoam transition-colors duration-300">Contact</a>
+        </div>
+    </div>
+
+    <main id="smooth-wrapper" class="bg-mist">
+        <div id="smooth-content">
+            
+            <!-- ============================================================
+                 HERO — FAQ (typographic, dark, dengan search)
+                 ============================================================ -->
+            <section id="faq-hero" class="relative w-full min-h-screen bg-charcoal text-mist overflow-hidden flex flex-col">
+                <div class="absolute inset-0 texture-overlay opacity-20"></div>
+
+                <!-- Editorial number background -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 faq-editorial-number pointer-events-none select-none">
+                    ?
+                </div>
+
+                <div class="relative z-10 flex-1 flex flex-col justify-center px-6 md:px-12 pt-36 md:pt-44 pb-12">
+                    <div class="max-w-4xl mx-auto w-full text-center">
+                        <div class="faq-eyebrow text-seafoam justify-center mb-10 reveal-fade" style="justify-content:center;">
+                            LOREM
+                        </div>
+                        <h1 class="font-serif leading-[1.02] tracking-tight mb-12 reveal-fade" style="font-size: clamp(2.75rem, 8vw, 7rem);">
+                            FAQ,<br>
+                            <span class="italic text-seafoam">lorem</span>.
+                        </h1>
+                        <p class="text-mist/60 font-light text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-16 reveal-fade">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        </p>
+
+                        <!-- Search -->
+                        <div class="faq-search-wrap reveal-fade">
+                            <input 
+                                type="text" 
+                                id="faqSearch" 
+                                class="faq-search" 
+                                placeholder="Search a question…"
+                                autocomplete="off"
+                            />
+                            <div class="faq-search-icon">
+                                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" stroke-linejoin="round" d="M20 20l-3.5-3.5"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative z-10 px-6 md:px-12 pb-10">
+                    <div class="max-w-7xl mx-auto flex items-end justify-between border-t border-mist/20 pt-6">
+                        <div class="text-[10px] tracking-[0.28em] uppercase text-mist/50">
+                            18 Questions · 05 Categories
+                        </div>
+                        <div class="text-2xl text-mist/70">&darr;</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 FAQ LAYOUT — sticky nav + categories
+                 ============================================================ -->
+            <section id="faq-content" class="py-24 md:py-32 px-6 md:px-12 bg-mist relative">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="faq-layout">
+
+                        <!-- Sticky category nav -->
+                        <aside class="faq-nav reveal-fade">
+                            <div class="faq-nav__title">Browse by Category</div>
+                            <ul class="faq-nav__list">
+                                <li>
+                                    <button class="faq-nav__link is-active" data-target="cat-stay">
+                                        <span>Stay & Rooms</span>
+                                        <span class="faq-nav__count">04</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="faq-nav__link" data-target="cat-rates">
+                                        <span>Rates & Booking</span>
+                                        <span class="faq-nav__count">03</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="faq-nav__link" data-target="cat-arrival">
+                                        <span>Getting Here</span>
+                                        <span class="faq-nav__count">03</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="faq-nav__link" data-target="cat-experience">
+                                        <span>Experience & Dining</span>
+                                        <span class="faq-nav__count">05</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="faq-nav__link" data-target="cat-policy">
+                                        <span>Policy & Practicalities</span>
+                                        <span class="faq-nav__count">03</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </aside>
+
+                        <!-- Categories + accordion -->
+                        <div class="faq-main">
+
+                            <!-- CATEGORY I — Stay & Rooms -->
+                            <div class="faq-category" id="cat-stay" data-category-block>
+                                <div class="faq-category__header reveal-fade">
+                                    <span class="faq-category__num">I</span>
+                                    <h2 class="faq-category__title">Stay &amp; Rooms</h2>
+                                </div>
+
+                                <div class="faq-list">
+                                    <div class="faq-item reveal-fade" data-question="how many guests can stay at the estate capacity bedrooms pavilions">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">01</span>
+                                            <span class="faq-item__q">How many guests can stay at the estate?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Up to 16 guests can stay overnight across the four pavilions. For day events, the estate can host up to 80 standing guests or 40 seated at dinner. Final capacity depends on layout and is confirmed after your site visit.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="are the pavilions air conditioned fans tropical heat">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">02</span>
+                                            <span class="faq-item__q">Are the pavilions air-conditioned?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                The pavilions are designed for natural ventilation with ceiling fans and cross-breezes. Janda Baik sits at elevation, so evenings and mornings are naturally cool. Air-conditioning is not part of the estate's design philosophy — we find our guests rarely miss it.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="is the estate exclusive private only our group">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">03</span>
+                                            <span class="faq-item__q">Is the estate exclusive to our group?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Yes. Every booking — whether a single pavilion or the entire estate — is entirely private. There are no shared spaces with other guests, no strangers on the grounds, and never two bookings at once.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="can we book individual pavilion or must whole estate">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">04</span>
+                                            <span class="faq-item__q">Can we book a single pavilion?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                For stays of two guests or a small family, a single pavilion can be booked on quieter weeks. The estate grounds remain yours to use. For events or larger groups, the entire estate is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CATEGORY II — Rates & Booking -->
+                            <div class="faq-category" id="cat-rates" data-category-block>
+                                <div class="faq-category__header reveal-fade">
+                                    <span class="faq-category__num">II</span>
+                                    <h2 class="faq-category__title">Rates &amp; Booking</h2>
+                                </div>
+
+                                <div class="faq-list">
+                                    <div class="faq-item reveal-fade" data-question="how much does it cost to stay rates pricing night">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">01</span>
+                                            <span class="faq-item__q">How much does a stay cost?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Rates vary by pavilion, season, and length of stay. A single pavilion begins from RM 1,200 per night; the entire estate from RM 4,800 per night. Full rates are shared on enquiry, along with any seasonal minimums.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="what is the cancellation policy refund deposit">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">02</span>
+                                            <span class="faq-item__q">What is your cancellation policy?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                A 50% deposit confirms your booking. Cancellations more than 30 days before arrival are refunded in full, less a small administrative fee. Within 30 days, the deposit is transferable to another date within 12 months. Full policy is shared with your booking confirmation.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="how far in advance should we book availability peak season">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">03</span>
+                                            <span class="faq-item__q">How far in advance should we book?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                For weddings and large gatherings, 6–12 months in advance is ideal. For smaller stays, 6–10 weeks is usually sufficient. Peak months — June to August, and December — book earliest. We always recommend enquiring before you set your dates.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CATEGORY III — Getting Here -->
+                            <div class="faq-category" id="cat-arrival" data-category-block>
+                                <div class="faq-category__header reveal-fade">
+                                    <span class="faq-category__num">III</span>
+                                    <h2 class="faq-category__title">Getting Here</h2>
+                                </div>
+
+                                <div class="faq-list">
+                                    <div class="faq-item reveal-fade" data-question="where is the estate located address janda baik bentong pahang">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">01</span>
+                                            <span class="faq-item__q">Where exactly is the estate?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Singgah Sana sits in Kampung Janda Baik, Bentong, Pahang — about 45 minutes from central Kuala Lumpur and just over an hour from KLIA. The last stretch is a quiet village road; precise directions and a pin will be shared with your booking confirmation.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="do you offer airport transfer pickup driver transport">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">02</span>
+                                            <span class="faq-item__q">Do you offer airport transfers?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Yes — we can arrange private transfers from KLIA, Subang, or anywhere in Kuala Lumpur through our trusted drivers. Rates are shared on request. Many guests also drive themselves; there is ample covered parking at the estate.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="can we arrive early or leave late check in check out times">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">03</span>
+                                            <span class="faq-item__q">Can we arrive early or leave late?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Standard check-in is 3:00 PM and check-out is 12:00 PM. Early arrival and late departure are possible subject to availability — just ask when you book. For event bookings, the estate is yours from dawn.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CATEGORY IV — Experience & Dining -->
+                            <div class="faq-category" id="cat-experience" data-category-block>
+                                <div class="faq-category__header reveal-fade">
+                                    <span class="faq-category__num">IV</span>
+                                    <h2 class="faq-category__title">Experience &amp; Dining</h2>
+                                </div>
+
+                                <div class="faq-list">
+                                    <div class="faq-item reveal-fade" data-question="are meals included in the stay food dining breakfast">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">01</span>
+                                            <span class="faq-item__q">Are meals included?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Breakfast is included with every stay. Lunch, dinner, and the Golden Hour Table are available on request, prepared by our estate cook using produce from the garden and the local market. Vegetarian, vegan, and halal menus are all available.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="what experiences activities are available yoga walks craft">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">02</span>
+                                            <span class="faq-item__q">What experiences are available?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Morning walks, river swims, and access to the estate grounds are included. Curated experiences — artisan sessions, guided treks, cooking classes, and the Golden Hour Table — can be arranged before or during your stay.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="are children welcome family kids baby toddler">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">03</span>
+                                            <span class="faq-item__q">Are children welcome?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Yes, warmly. The estate is a beautiful place for children — river, lawn, orchard, and open space. We can arrange cots, high chairs, and child-friendly meals. Please let us know ages when you book so we can prepare.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="can we bring our dog pet cat animals">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">04</span>
+                                            <span class="faq-item__q">Can we bring our pet?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                We welcome well-behaved pets on a case-by-case basis, with prior arrangement. There is a small additional cleaning fee. Please mention your pet when you enquire so we can prepare the pavilion accordingly.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="is there wifi internet connection online">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">05</span>
+                                            <span class="faq-item__q">Is there Wi-Fi?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Yes — reliable Wi-Fi is available across the estate, including in each pavilion. That said, many guests choose to leave their phones in the room. The river does not have a signal.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CATEGORY V — Policy & Practicalities -->
+                            <div class="faq-category" id="cat-policy" data-category-block>
+                                <div class="faq-category__header reveal-fade">
+                                    <span class="faq-category__num">V</span>
+                                    <h2 class="faq-category__title">Policy &amp; Practicalities</h2>
+                                </div>
+
+                                <div class="faq-list">
+                                    <div class="faq-item reveal-fade" data-question="what is the smoking alcohol policy rules">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">01</span>
+                                            <span class="faq-item__q">What is your smoking &amp; alcohol policy?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                The pavilions are strictly non-smoking; smoking is permitted only in designated outdoor areas. Alcohol is welcome and can be arranged through us, or brought with you. We ask only that noise is kept considerate after 11:00 PM, out of respect for the village.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="is the estate accessible wheelchair mobility elderly disabled">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">02</span>
+                                            <span class="faq-item__q">Is the estate accessible?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                The estate is built on gently sloping ground with traditional raised pavilions. Some pathways are gravel and a few steps are unavoidable. We can arrange ground-level access for guests with limited mobility — please tell us in advance so we can prepare the right pavilion and route.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item reveal-fade" data-question="what should we bring what to pack essentials">
+                                        <button class="faq-item__trigger">
+                                            <span class="faq-item__q-num">03</span>
+                                            <span class="faq-item__q">What should we bring?</span>
+                                            <span class="faq-item__icon"></span>
+                                        </button>
+                                        <div class="faq-item__content">
+                                            <div class="faq-item__content-inner">
+                                                Comfortable walking shoes, a light rain jacket, swimwear for the river, and a good book. Everything else — organic linens, robes, incense, mosquito nets, and toiletries — is provided in your pavilion. The estate is a place for less, not more.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Empty state -->
+                            <div class="faq-empty" id="faqEmpty">
+                                <div class="faq-divider">
+                                    <span class="faq-divider__line"></span>
+                                    <span class="faq-divider__symbol">·</span>
+                                    <span class="faq-divider__line"></span>
+                                </div>
+                                <p class="font-serif text-2xl text-charcoal/50 mb-3">No questions match your search.</p>
+                                <p class="text-charcoal/40 font-light text-sm mb-8">Try a different word, or reach us directly below.</p>
+                                <button id="faqClearSearch" class="text-[10px] tracking-[0.28em] uppercase text-moss border-b border-moss/40 pb-1 hover:border-moss transition-colors">
+                                    Clear search
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CONTACT CARD
+                 ============================================================ -->
+            <section id="faq-contact" class="py-16 md:py-24 px-6 md:px-12 bg-mist">
+                <div class="max-w-7xl mx-auto">
+                    <div class="faq-contact-card reveal-fade">
+                        <div class="absolute inset-0 texture-overlay opacity-40"></div>
+
+                        <div class="relative z-10">
+                            <span class="faq-contact-card__label">Still Wondering?</span>
+                            <h3 class="faq-contact-card__title">If your question isn't here, ask us directly.</h3>
+                            <p class="faq-contact-card__desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            </p>
+                        </div>
+
+                        <div class="faq-contact-card__actions relative z-10">
+                            <a href="contact.html" class="faq-contact-link">
+                                <span>Send an Enquiry</span>
+                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </a>
+                            <a href="https://wa.me/60000000000" target="_blank" rel="noopener" class="faq-contact-link">
+                                <span>WhatsApp Us</span>
+                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </a>
+                            <a href="mailto:hello@singgah-sana.com" class="faq-contact-link">
+                                <span>hello@singgah-sana.com</span>
+                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 CTA — closing
+                 ============================================================ -->
+            <section id="faq-cta" class="py-24 md:py-32 px-6 md:px-12 bg-mist relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                <div class="max-w-5xl mx-auto relative z-10 text-center">
+                    <span class="text-[10px] tracking-[0.3em] uppercase text-moss font-medium mb-8 block reveal-fade">
+                        LOREM
+                    </span>
+                    <h2 class="split-text font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] text-charcoal tracking-tight mb-10">
+                        LOREM
+                    </h2>
+                    <p class="text-charcoal/60 font-light text-base md:text-lg max-w-xl mx-auto mb-12 reveal-fade">
+                        LOREM
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 reveal-fade">
+                        <a href="contact.html" class="inline-block bg-charcoal text-mist px-10 py-4 text-[10px] tracking-[0.28em] uppercase font-medium hover:bg-moss transition-all duration-500">
+                            Arrange a Visit
+                        </a>
+                        <a href="private-estate.html" class="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-charcoal border-b border-charcoal/40 pb-1 hover:gap-5 hover:border-moss hover:text-moss transition-all duration-500">
+                            Explore the Estate
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+             <footer id="availability" class="bg-moss text-mist pt-24 pb-12 px-6 md:px-12 relative overflow-hidden">
+                <div class="absolute inset-0 texture-overlay opacity-40"></div>
+                
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div id="enquire" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-24 border-b border-mist/20 pb-24">
+                        <div>
+                            <span class="text-[10px] tracking-[0.2em] uppercase text-seafoam mb-8 block reveal-fade">Enquire</span>
+                            <h2 class="font-serif text-5xl md:text-6xl mb-8 leading-[1.1] text-mist tracking-tight split-text">
+                                Begin your <em class="text-seafoam">stay</em>.
+                            </h2>
+                            <p class="text-mist/70 font-light text-base md:text-lg max-w-md mb-10 reveal-fade">
+                                The entire estate can be yours. Enquire about availability, rates, and bespoke experiences.
+                            </p>
+                            <a href="contact.html" class="reveal-fade inline-block border border-mist px-8 py-4 text-xs tracking-[0.2em] uppercase hover:bg-mist hover:text-moss transition-all duration-300">
+                                Contact Us
+                            </a>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 lg:justify-end mt-8 lg:mt-16">
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Discover</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="about.html" class="footer-link">About</a></li>
+                                    <li><a href="blog.html" class="footer-link">Blog</a></li>
+                                    <li><a href="faq.html" class="footer-link">FAQ</a></li>
+                                    <li><a href="policy.html" class="footer-link">Policy</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Contact</h4>
+                                <ul class="space-y-3 font-light text-mist/80 text-base">
+                                    <li><a href="#" class="footer-link">hello@singgah-sana.com</a></li>
+                                    <li><a href="#" class="footer-link">+60 00000000</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="reveal-fade">
+                                <h4 class="text-[10px] tracking-[0.3em] uppercase font-medium mb-6 text-seafoam">Location</h4>
+                                <address class="not-italic font-light text-mist/80 text-base leading-relaxed">
+                                    No.3 Lorong Cheringin<br>
+                                    Kampung Janda Baik<br>
+                                    28750 Bentong, Pahang<br>
+                                    Malaysia
+                                </address>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-center text-[10px] text-mist/50 uppercase tracking-[0.2em] font-medium reveal-fade">
+                        <p class="mb-4 md:mb-0">&copy; 2026 Singgah Sana. All rights reserved.</p>
+                        <div class="flex flex-wrap gap-6 justify-center">
+                            <a href="#" class="hover:text-mist transition-colors">Instagram</a>
+                            <a href="#" class="hover:text-mist transition-colors">Facebook</a>
+                            <a href="#" class="hover:text-mist transition-colors">TripAdvisor</a>
+                            <a href="#" class="hover:text-mist transition-colors">TikTok</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- LIVE CHAT -->
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-header">
+            <div>
+                <div class="chat-header-title">Live Chat Singgah Sana</div>
+                <div class="chat-header-status">Online · Replies within minutes</div>
+            </div>
+            <button id="chatClose" class="chat-close" aria-label="Close chat">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="chatBody" class="chat-body"></div>
+
+        <div class="chat-input-wrap">
+            <div class="chat-input-row">
+                <textarea id="chatInput" class="chat-input" rows="1" placeholder="Write a message..."></textarea>
+                <button id="chatSend" class="chat-send" aria-label="Send">
+                    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            Lorem ipsum
+        </div>
+    </div>
+
+    <button id="chatButton" class="chat-button" aria-label="Open chat">
+        <svg viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+        </svg>
+        <span>Live Chat</span>
+    </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            gsap.config({ force3D: true });
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+            gsap.ticker.lagSmoothing(0); 
+
+            document.body.style.overflow = "hidden";
+
+            // Loader
+            const tlLoader = gsap.timeline({
+                onComplete: () => {
+                    document.body.style.overflow = ""; 
+                }
+            });
+
+            tlLoader
+                .to("#loader-logo", { opacity: 1, scale: 1.5, duration: 2, ease: "power3.out" })
+                .to("#loader-logo", { opacity: 0, y: -30, duration: 1, ease: "power2.inOut" }, "+=0.5")
+                .to("#loader", { yPercent: -100, duration: 1, ease: "power3.inOut" });
+
+            // Navbar
+            let lastScroll = 0;
+            const navbar = document.getElementById('navbar');
+            
+            lenis.on('scroll', (e) => {
+                const currentScroll = e.animatedScroll;
+                if (!document.getElementById('menuOverlay').classList.contains('clip-menu-visible')) {
+                    if (currentScroll > 50) {
+                        navbar.classList.replace('bg-transparent', 'bg-charcoal');
+                        if (currentScroll > lastScroll) {
+                            navbar.classList.remove('nav-visible');
+                            navbar.classList.add('nav-hidden');
+                        } else {
+                            navbar.classList.remove('nav-hidden');
+                            navbar.classList.add('nav-visible');
+                        }
+                    } else {
+                        navbar.classList.replace('bg-charcoal', 'bg-transparent');
+                        navbar.classList.remove('nav-hidden');
+                        navbar.classList.add('nav-visible');
+                    }
+                }
+                lastScroll = currentScroll;
+            });
+
+            // Menu
+            const menuBtn = document.getElementById('menuBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            function toggleMenu() {
+                menuOverlay.classList.toggle('clip-menu-visible');
+                menuOverlay.classList.toggle('clip-menu-hidden');
+                
+                if(menuOverlay.classList.contains('clip-menu-visible')) {
+                    lenis.stop();
+                } else {
+                    lenis.start();
+                }
+            }
+
+            menuBtn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuOverlay.classList.remove('clip-menu-visible');
+                    menuOverlay.classList.add('clip-menu-hidden');
+                    lenis.start();
+                });
+            });
+
+            // Typography Reveals
+            const splitHeadings = new SplitType('.split-text', { types: 'lines' });
+            
+            const wrapLines = (splitInstance) => {
+                splitInstance.lines.forEach(line => {
+                    if (!line.parentElement.classList.contains('line-wrapper')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('line-wrapper');
+                        line.parentNode.insertBefore(wrapper, line);
+                        wrapper.appendChild(line);
+                        gsap.set(line, { yPercent: 120, rotationZ: 2, opacity: 0 });
+                    }
+                });
+            };
+
+            wrapLines(splitHeadings);
+
+            ScrollTrigger.batch(splitHeadings.elements, {
+                start: "top 85%",
+                onEnter: batch => {
+                    batch.forEach(el => {
+                        gsap.to(el.querySelectorAll('.line'), {
+                            yPercent: 0, rotationZ: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: "power3.out"
+                        });
+                    });
+                }
+            });
+
+            // Fade in
+            ScrollTrigger.batch('.reveal-fade', {
+                start: "top 92%",
+                onEnter: batch => {
+                    gsap.fromTo(batch, 
+                        { y: 24, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: "power2.out", overwrite: true }
+                    );
+                }
+            });
+
+            // ============================================================
+            // FAQ ACCORDION
+            // ============================================================
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            function closeAllFaq() {
+                faqItems.forEach(item => {
+                    item.classList.remove('is-open');
+                    const content = item.querySelector('.faq-item__content');
+                    if (content) content.style.maxHeight = null;
+                });
+            }
+
+            faqItems.forEach(item => {
+                const trigger = item.querySelector('.faq-item__trigger');
+                const content = item.querySelector('.faq-item__content');
+
+                trigger.addEventListener('click', () => {
+                    const wasOpen = item.classList.contains('is-open');
+                    closeAllFaq();
+                    if (!wasOpen) {
+                        item.classList.add('is-open');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+            });
+
+            // ============================================================
+            // FAQ CATEGORY NAV (scroll to category)
+            // ============================================================
+            const faqNavLinks = document.querySelectorAll('.faq-nav__link');
+
+            function setActiveNav(target) {
+                faqNavLinks.forEach(l => l.classList.remove('is-active'));
+                const active = document.querySelector(`.faq-nav__link[data-target="${target}"]`);
+                if (active) active.classList.add('is-active');
+            }
+
+            faqNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const targetId = link.getAttribute('data-target');
+                    const targetEl = document.getElementById(targetId);
+                    setActiveNav(targetId);
+                    if (targetEl) {
+                        lenis.scrollTo(targetEl, { offset: -100, duration: 1.4 });
+                    }
+                });
+            });
+
+            // Update active nav on scroll (via ScrollTrigger)
+            document.querySelectorAll('[data-category-block]').forEach(block => {
+                ScrollTrigger.create({
+                    trigger: block,
+                    start: "top 40%",
+                    end: "bottom 40%",
+                    onEnter: () => setActiveNav(block.id),
+                    onEnterBack: () => setActiveNav(block.id)
+                });
+            });
+
+            // ============================================================
+            // FAQ SEARCH
+            // ============================================================
+            const faqSearch = document.getElementById('faqSearch');
+            const faqEmpty = document.getElementById('faqEmpty');
+            const faqClearSearch = document.getElementById('faqClearSearch');
+            const allCategoryBlocks = document.querySelectorAll('[data-category-block]');
+
+            function normalizeText(str) {
+                return (str || '').toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+            }
+
+            function runSearch(query) {
+                const q = normalizeText(query);
+
+                // Reset everything when empty
+                if (!q) {
+                    faqItems.forEach(item => {
+                        item.style.display = '';
+                        item.classList.remove('is-open');
+                        const c = item.querySelector('.faq-item__content');
+                        if (c) c.style.maxHeight = null;
+                    });
+                    allCategoryBlocks.forEach(b => b.style.display = '');
+                    faqEmpty.classList.remove('is-visible');
+                    return;
+                }
+
+                let totalVisible = 0;
+
+                allCategoryBlocks.forEach(block => {
+                    let blockVisible = 0;
+                    const itemsInBlock = block.querySelectorAll('.faq-item');
+
+                    itemsInBlock.forEach(item => {
+                        const question = normalizeText(item.querySelector('.faq-item__q')?.textContent);
+                        const answer = normalizeText(item.querySelector('.faq-item__content-inner')?.textContent);
+                        const dataQ = normalizeText(item.getAttribute('data-question'));
+                        const haystack = question + ' ' + answer + ' ' + dataQ;
+
+                        // Match by substring across words — tolerate partial words
+                        const words = q.split(' ').filter(Boolean);
+                        const match = words.every(w => haystack.includes(w));
+
+                        if (match) {
+                            item.style.display = '';
+                            item.classList.add('is-open');
+                            const c = item.querySelector('.faq-item__content');
+                            if (c) c.style.maxHeight = c.scrollHeight + 'px';
+                            blockVisible++;
+                            totalVisible++;
+                        } else {
+                            item.style.display = 'none';
+                            item.classList.remove('is-open');
+                            const c = item.querySelector('.faq-item__content');
+                            if (c) c.style.maxHeight = null;
+                        }
+                    });
+
+                    block.style.display = blockVisible > 0 ? '' : 'none';
+                });
+
+                faqEmpty.classList.toggle('is-visible', totalVisible === 0);
+                ScrollTrigger.refresh();
+            }
+
+            let searchDebounce;
+            if (faqSearch) {
+                faqSearch.addEventListener('input', (e) => {
+                    clearTimeout(searchDebounce);
+                    const value = e.target.value;
+                    searchDebounce = setTimeout(() => runSearch(value), 120);
+                });
+            }
+
+            if (faqClearSearch) {
+                faqClearSearch.addEventListener('click', () => {
+                    if (faqSearch) faqSearch.value = '';
+                    runSearch('');
+                    if (faqSearch) faqSearch.focus();
+                });
+            }
+
+            // Resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    splitHeadings.revert();
+                    splitHeadings.split();
+                    wrapLines(splitHeadings);
+                    // Recalculate open faq heights
+                    faqItems.forEach(item => {
+                        if (item.classList.contains('is-open')) {
+                            const c = item.querySelector('.faq-item__content');
+                            if (c) c.style.maxHeight = c.scrollHeight + 'px';
+                        }
+                    });
+                    ScrollTrigger.refresh();
+                }, 200);
+            });
+
+            // ============================================================
+            // LIVE CHAT — Concierge
+            // ============================================================
+            const chatPanel = document.getElementById('chatPanel');
+            const chatButton = document.getElementById('chatButton');
+            const chatClose = document.getElementById('chatClose');
+            const chatBody = document.getElementById('chatBody');
+            const chatInput = document.getElementById('chatInput');
+            const chatSend = document.getElementById('chatSend');
+
+            let chatOpen = false;
+            let isTyping = false;
+            const CHAT_STORAGE_KEY = 'singgahChatHistory_v1';
+
+            let chatHistory = [];
+            try {
+                chatHistory = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+            } catch (e) {
+                chatHistory = [];
+            }
+
+            function getTimeString() {
+                const now = new Date();
+                return now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const initialBotMessages = [
+                {
+                    type: 'bot',
+                    text: 'Welcome to Singgah Sana. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    time: getTimeString()
+                },
+                {
+                    type: 'bot',
+                    text: 'How may I assist you today?',
+                    time: getTimeString(),
+                    quickReplies: ['Lorem', 'Lorem', 'Lorem', 'Lorem']
+                }
+            ];
+
+            function getBotReply(userText) {
+                const lower = userText.toLowerCase().trim();
+
+                if (/^(hi|hello|hey|good morning|good afternoon|good evening|greetings|selamat|hai)/.test(lower)) {
+                    return {
+                        text: 'Hello, lorem ipsum dolor sit amet consectetur adipiscing elit sed do?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(book|reserve|reservation|stay|room|pavilion|accommodation|available|availability|check.?in|check.?out)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?',
+                        quickReplies: ['Lorem', 'Lorem', 'Lorem']
+                    };
+                }
+
+                if (/(rate|price|cost|how much|pricing|fee|expensive|cheap|budget)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Cancellation policy']
+                    };
+                }
+
+                if (/(cancel|cancellation|refund|policy|deposit|penalty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See full policy', 'Ask another question']
+                    };
+                }
+
+                if (/(where|location|address|directions|how to get|far|distance|near|map|janda baik|bentong|pahang|kl|kuala lumpur)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Open in Maps', 'Airport transfer', 'Ask another question']
+                    };
+                }
+
+                if (/(activit|experience|things to do|do there|what can i do|yoga|fishing|hike|hiking|picnic|walk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See experiences', 'Book a stay']
+                    };
+                }
+
+                if (/(event|wedding|marriage|engagement|private dinner|meeting|conference|workshop|corporate|celebrat)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See events', 'Send an enquiry']
+                    };
+                }
+
+                if (/(child|children|kid|family|baby|infant|toddler)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(pet|dog|cat|animal)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(amenit|facilit|provide|include|wifi|wi-fi|air.?con|ac|towel|robe|toiletr|bedding|net|safe|incense|desk)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['See rooms', 'Ask another question']
+                    };
+                }
+
+                if (/(food|dining|dinner|lunch|breakfast|chef|meal|eat|menu|vegetarian|vegan|halal|allerg)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Book a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(accessib|wheelchair|mobility|disabled|elderly|walking difficulty)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(airport|transfer|pickup|pick up|taxi|grab|transport|driver)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Ask another question']
+                    };
+                }
+
+                if (/(wi.?fi|internet|connection|online)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Ask another question']
+                    };
+                }
+
+                if (/(thank|thanks|appreciat|grateful)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        quickReplies: ['Booking a stay', 'Goodbye']
+                    };
+                }
+
+                if (/(bye|goodbye|see you|farewell|that.s all|nothing else)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                    };
+                }
+
+                if (/(see room|see rooms|show rooms|open rooms)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'room.html'
+                    };
+                }
+
+                if (/(see experience|show experience|open experience|see experiences)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'experience.html'
+                    };
+                }
+
+                if (/(see event|show event|open event|see events|send.*enquir)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                        redirect: 'events.html'
+                    };
+                }
+
+                if (/(see.*polic|open.*polic)/.test(lower)) {
+                    return {
+                        text: 'Opening our policy page for you now.',
+                        redirect: 'policy.html'
+                    };
+                }
+
+                if (/(map|open.*map|direction)/.test(lower)) {
+                    return {
+                        text: 'Opening our location in Maps for you now.',
+                        redirect: 'https://maps.app.goo.gl/U5hAkqrDFPQwzhny7'
+                    };
+                }
+
+                if (/(book a stay|booking a stay|reserve|make.*book)/.test(lower)) {
+                    return {
+                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        redirect: 'room.html'
+                    };
+                }
+
+                return {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+                    quickReplies: ['Booking a stay', 'Things to do', 'Getting here']
+                };
+            }
+
+            function renderChat() {
+                if (chatHistory.length === 0) {
+                    chatHistory = [...initialBotMessages];
+                    saveChat();
+                }
+
+                chatBody.innerHTML = '';
+
+                chatHistory.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = `chat-msg chat-msg--${msg.type}`;
+
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-msg__bubble';
+                    bubble.textContent = msg.text;
+                    div.appendChild(bubble);
+
+                    if (msg.quickReplies && msg.quickReplies.length > 0) {
+                        const quick = document.createElement('div');
+                        quick.className = 'chat-quick';
+                        msg.quickReplies.forEach(reply => {
+                            const btn = document.createElement('button');
+                            btn.textContent = reply;
+                            btn.addEventListener('click', () => handleQuickReply(reply));
+                            quick.appendChild(btn);
+                        });
+                        div.appendChild(quick);
+                    }
+
+                    const time = document.createElement('div');
+                    time.className = 'chat-msg__time';
+                    time.textContent = msg.time || '';
+                    div.appendChild(time);
+
+                    chatBody.appendChild(div);
+                });
+
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function saveChat() {
+                try {
+                    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+                } catch (e) {}
+            }
+
+            function addMessage(msg) {
+                chatHistory.push(msg);
+                saveChat();
+                renderChat();
+            }
+
+            function showTyping() {
+                const typing = document.createElement('div');
+                typing.className = 'chat-typing';
+                typing.id = 'chatTyping';
+                typing.innerHTML = '<span></span><span></span><span></span>';
+                chatBody.appendChild(typing);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+            function hideTyping() {
+                const t = document.getElementById('chatTyping');
+                if (t) t.remove();
+            }
+
+            function handleQuickReply(reply) {
+                addMessage({
+                    type: 'user',
+                    text: reply,
+                    time: getTimeString()
+                });
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(reply);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 500);
+            }
+
+            function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text || isTyping) return;
+
+                addMessage({
+                    type: 'user',
+                    text: text,
+                    time: getTimeString()
+                });
+
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+
+                isTyping = true;
+                chatSend.disabled = true;
+
+                setTimeout(() => showTyping(), 200);
+
+                setTimeout(() => {
+                    hideTyping();
+                    const botReply = getBotReply(text);
+                    addMessage({
+                        type: 'bot',
+                        text: botReply.text,
+                        time: getTimeString(),
+                        quickReplies: botReply.quickReplies || null
+                    });
+                    isTyping = false;
+                    chatSend.disabled = false;
+
+                    if (botReply.redirect) {
+                        const url = botReply.redirect;
+                        setTimeout(() => {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                window.location.href = url;
+                            }
+                        }, 1500);
+                    }
+                }, 900 + Math.random() * 600);
+            }
+
+            function openChat() {
+                chatOpen = true;
+                chatPanel.classList.add('is-open');
+                chatButton.classList.add('is-hidden');
+                setTimeout(() => chatInput.focus(), 400);
+            }
+
+            function closeChat() {
+                chatOpen = false;
+                chatPanel.classList.remove('is-open');
+                chatButton.classList.remove('is-hidden');
+            }
+
+            chatButton.addEventListener('click', openChat);
+            chatClose.addEventListener('click', closeChat);
+            chatSend.addEventListener('click', sendMessage);
+
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            chatInput.addEventListener('input', () => {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
+            });
+
+            const hasAutoOpened = sessionStorage.getItem('singgahChatAutoOpened');
+            if (!hasAutoOpened && window.innerWidth > 1024) {
+                setTimeout(() => {
+                    if (!chatOpen) {
+                        openChat();
+                        sessionStorage.setItem('singgahChatAutoOpened', '1');
+                    }
+                }, 12000);
+            }
+
+            renderChat();
+        });
+    </script>
+</body>
+</html>
